@@ -24,8 +24,16 @@ import javax.persistence.EntityManagerFactory;
  * @author yo
  */
 public class KeyJpaController implements Serializable {
+    
+    private static KeyJpaController singleton = null;
+    
+    
+    public static KeyJpaController getController(){
+        if(singleton==null) singleton = new KeyJpaController(javax.persistence.Persistence.createEntityManagerFactory("UMLProjectPU"));
+        return singleton;
+    }
 
-    public KeyJpaController(EntityManagerFactory emf) {
+    private KeyJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;

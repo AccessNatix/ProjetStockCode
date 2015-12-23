@@ -21,8 +21,16 @@ import javax.persistence.criteria.Root;
  * @author yo
  */
 public class ClientJpaController implements Serializable {
+    
+    private static ClientJpaController singleton = null;
+    
+    
+    public static ClientJpaController getController(){
+        if(singleton==null) singleton = new ClientJpaController(javax.persistence.Persistence.createEntityManagerFactory("UMLProjectPU"));
+        return singleton;
+    }
 
-    public ClientJpaController(EntityManagerFactory emf) {
+    private ClientJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;

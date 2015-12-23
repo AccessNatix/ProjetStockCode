@@ -1,10 +1,10 @@
 package modele;
 
-import controleur.jpacontroleur.AisleArticlesJpaController;
 import controleur.jpacontroleur.WarehouseArticlesJpaController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modele.entity.AisleArticles;
+import modele.entity.Article;
 import modele.entity.WarehouseArticles;
 
 /**
@@ -15,29 +15,39 @@ public class ManagerWarehouse {
     
     private WarehouseArticlesJpaController aWarehouseController;
     
-    public ManagerWarehouse()
+    private static ManagerWarehouse managerWarehouse = null;
+    
+    public static ManagerWarehouse getManagerWarehouse(){
+        if(managerWarehouse == null) managerWarehouse = new ManagerWarehouse();
+        return managerWarehouse;
+    }
+    
+    private ManagerWarehouse()
     {
-        this.aWarehouseController = new  WarehouseArticlesJpaController(null);
+        this.aWarehouseController = WarehouseArticlesJpaController.getController();
     }
     
     /**
      * Ajouter article a rayon
      * @param article 
      */
-    public void addArticleToWarehouse(WarehouseArticles article)
+    public void addArticleToWarehouse(Article article, int quantity)
     {
         // recherche article dans rayon
-        WarehouseArticles tmp = this.aWarehouseController.findWarehouseArticles(article.getId());
+        WarehouseArticles tmp = this.aWarehouseController.findByArticleId(article.getId());
          
         if(tmp == null)
         {
-            this.aWarehouseController.create(article);
+            tmp = new WarehouseArticles();
+            tmp.setArticleId(article);
+            tmp.setQuantity(quantity);
+            this.aWarehouseController.create(tmp);
         }
         else
         {
             try {
-                tmp.setQuantity(tmp.getQuantity()+article.getQuantity());
-                this.aWarehouseController.edit(article);
+                tmp.setQuantity(tmp.getQuantity()+quantity);
+                this.aWarehouseController.edit(tmp);
             } catch (Exception ex) {
                 Logger.getLogger(ManagerAisle.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -48,14 +58,37 @@ public class ManagerWarehouse {
      * Retirer article du rayon
      * @param article 
      */
-    public void removeArticleFromAisle(AisleArticles article)
+    public void removeArticleFromWarehouse(Article article, int quantity)
     {
-        
+        WarehouseArticles tmp = this.aWarehouseController.findByArticleId(article.getId());
+         
+        if(tmp == null)
+        {
+            Logger.getLogger(ManagerAisle.class.getName()).log(Level.SEVERE, null, new UnsupportedOperationException());
+        }
+        else
+        {
+            try {
+                if(tmp.getQuantity()<quantity) {
+                    Logger.getLogger(ManagerWarehouse.class.getName()).log(Level.SEVERE, null, new UnsupportedOperationException());
+                }
+                else if (tmp.getQuantity()==quantity){
+                    this.aWarehouseController.destroy(tmp.getId());
+                }
+                else{
+                    tmp.setQuantity(tmp.getQuantity()-quantity);
+                    this.aWarehouseController.edit(tmp);
+                }
+                
+            } catch (Exception ex) {
+                Logger.getLogger(ManagerWarehouse.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
-    public WarehouseArticles getArticleFromAisle(int id)
+    public WarehouseArticles getArticleFromWarehouse(Article article)
     {
-        WarehouseArticles tmp = this.aWarehouseController.findWarehouseArticles(id);
+        WarehouseArticles tmp = this.aWarehouseController.findByArticleId(article.getId());
         return tmp;
     }
 }

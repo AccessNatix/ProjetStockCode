@@ -22,8 +22,16 @@ import javax.persistence.EntityManagerFactory;
  * @author yo
  */
 public class AisleArticlesJpaController implements Serializable {
+    
+    private static AisleArticlesJpaController singleton = null;
+    
+    
+    public static AisleArticlesJpaController getController(){
+        if(singleton==null) singleton = new AisleArticlesJpaController(javax.persistence.Persistence.createEntityManagerFactory("UMLProjectPU"));
+        return singleton;
+    }
 
-    public AisleArticlesJpaController(EntityManagerFactory emf) {
+    private AisleArticlesJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -163,6 +171,15 @@ public class AisleArticlesJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+    public AisleArticles findByArticleId(int articleId){
+        List<AisleArticles> l = getEntityManager()
+            .createNamedQuery("AisleArticles.findByArticleId")
+            .setParameter("articleId", articleId)
+            .getResultList();
+        if(l.isEmpty()) return null;
+        return l.get(0);
     }
     
 }

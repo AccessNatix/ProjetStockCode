@@ -23,8 +23,16 @@ import javax.persistence.EntityManagerFactory;
  * @author yo
  */
 public class TransactionArticlesJpaController implements Serializable {
-
-    public TransactionArticlesJpaController(EntityManagerFactory emf) {
+    
+    private static TransactionArticlesJpaController singleton = null;
+    
+    
+    public static TransactionArticlesJpaController getController(){
+        if(singleton==null) singleton = new TransactionArticlesJpaController(javax.persistence.Persistence.createEntityManagerFactory("UMLProjectPU"));
+        return singleton;
+    }
+    
+    private TransactionArticlesJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;

@@ -23,9 +23,18 @@ import javax.persistence.EntityManagerFactory;
  */
 public class WarehouseArticlesJpaController implements Serializable {
 
-    public WarehouseArticlesJpaController(EntityManagerFactory emf) {
+    private static WarehouseArticlesJpaController singleton = null;
+    
+    
+    public static WarehouseArticlesJpaController getController(){
+        if(singleton==null) singleton = new WarehouseArticlesJpaController(javax.persistence.Persistence.createEntityManagerFactory("UMLProjectPU"));
+        return singleton;
+    }
+    
+    private WarehouseArticlesJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
+    
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
@@ -163,6 +172,15 @@ public class WarehouseArticlesJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+    public WarehouseArticles findByArticleId(int articleId){
+        List<WarehouseArticles> l = getEntityManager()
+            .createNamedQuery("WarehouseArticles.findByArticleId")
+            .setParameter("articleId", articleId)
+            .getResultList();
+        if(l.isEmpty()) return null;
+        return l.get(0);
     }
     
 }

@@ -28,6 +28,7 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "WarehouseArticles.findAll", query = "SELECT w FROM WarehouseArticles w"),
     @NamedQuery(name = "WarehouseArticles.findById", query = "SELECT w FROM WarehouseArticles w WHERE w.id = :id"),
+    @NamedQuery(name = "WarehouseArticles.findByArticleId", query = "SELECT w FROM WarehouseArticles w WHERE w.articleId.id = :ArticleId"),
     @NamedQuery(name = "WarehouseArticles.findByQuantity", query = "SELECT w FROM WarehouseArticles w WHERE w.quantity = :quantity")})
 public class WarehouseArticles implements Serializable {
 

@@ -23,8 +23,16 @@ import javax.persistence.EntityManagerFactory;
  * @author yo
  */
 public class SessionJpaController implements Serializable {
+    
+    private static SessionJpaController singleton = null;
+    
+    
+    public static SessionJpaController getController(){
+        if(singleton==null) singleton = new SessionJpaController(javax.persistence.Persistence.createEntityManagerFactory("UMLProjectPU"));
+        return singleton;
+    }
 
-    public SessionJpaController(EntityManagerFactory emf) {
+    private SessionJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;

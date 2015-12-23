@@ -25,8 +25,16 @@ import javax.persistence.EntityManagerFactory;
  * @author yo
  */
 public class EmployeeJpaController implements Serializable {
+    
+    private static EmployeeJpaController singleton = null;
+    
+    
+    public static EmployeeJpaController getController(){
+        if(singleton==null) singleton = new EmployeeJpaController(javax.persistence.Persistence.createEntityManagerFactory("UMLProjectPU"));
+        return singleton;
+    }
 
-    public EmployeeJpaController(EntityManagerFactory emf) {
+    private EmployeeJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
