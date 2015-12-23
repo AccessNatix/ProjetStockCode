@@ -1,6 +1,6 @@
 package modele;
 
-import controleur.AisleArticlesJpaController;
+import controleur.jpacontroleur.AisleArticlesJpaController;
 import modele.entity.AisleArticles;
 
 /**
