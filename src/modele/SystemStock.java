@@ -1,8 +1,8 @@
 package modele;
 
 public class SystemStock {
-	public Aisle aAisle;
-	public Warehouse aWarehouse;
+	public ManagerAisle aAisle;
+	public ManagerWarehouse aWarehouse;
 
 	public void restock(String pArticle, String pInt_12) {
 		throw new UnsupportedOperationException();
