@@ -17,6 +17,6 @@ public class SystemStock {
 	}
 
 	public void checkStock() {
-		throw new UnsupportedOperationException();
+    
 	}
 }
