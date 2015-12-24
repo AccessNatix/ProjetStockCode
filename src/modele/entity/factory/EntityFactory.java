@@ -24,8 +24,11 @@ import controller.jpacontroller.SessionTransactionsJpaController;
 import controller.jpacontroller.TransactionArticlesJpaController;
 import controller.jpacontroller.TransactionJpaController;
 import controller.jpacontroller.WarehouseArticlesJpaController;
+import controller.jpacontroller.exceptions.IllegalOrphanException;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modele.SystemStock;
 import modele.entity.AisleArticles;
 import modele.entity.Article;
@@ -62,9 +65,14 @@ public class EntityFactory {
             aisleArticle.setArticleId(article);
             aisleArticle.setQuantity(quantity);
 
-            AisleArticlesJpaController.getController().create(aisleArticle);
+            try {
+                AisleArticlesJpaController.getController().create(aisleArticle);
+                t = (T) aisleArticle;
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(EntityFactory.class.getName()).log(Level.SEVERE, null, ex);
+                t = null;
+            }
             
-            t = (T) aisleArticle;
         }
         else if(t.getClass() == Article.class){
             Provider provider = (Provider) attributes.get("provider");
@@ -254,10 +262,10 @@ public class EntityFactory {
             t = (T) sessionCommand;
         }
         else if(t.getClass() == Transaction.class){
-            String type = (String) attributes.get("type")
+            String type = (String) attributes.get("type");
             
             Transaction transaction = new Transaction();
-            transaction.setType(type);
+            transaction.set(type);
 
             TransactionJpaController.getController().create(transaction);
             

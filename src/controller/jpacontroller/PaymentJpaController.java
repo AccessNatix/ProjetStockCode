@@ -22,7 +22,7 @@ import modele.entity.Transaction;
  * @author yo
  */
 public class PaymentJpaController implements Serializable {
-    
+
     private static PaymentJpaController singleton = null;
     
     

@@ -1,10 +1,12 @@
 package modele;
 
 import controller.jpacontroller.AisleArticlesJpaController;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modele.entity.AisleArticles;
 import modele.entity.Article;
+import modele.entity.factory.EntityFactory;
 
 /**
  *
@@ -29,6 +31,7 @@ public class ManagerAisle {
     /**
      * Ajouter article a rayon
      * @param article 
+     * @param quantity 
      */
     public void addArticleToAisle(Article article, int quantity)
     {
@@ -37,10 +40,10 @@ public class ManagerAisle {
          
         if(tmp == null)
         {
-            tmp = new AisleArticles();
-            tmp.setArticleId(article);
-            tmp.setQuantity(quantity);
-            this.aAisleController.create(tmp);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("article", article);
+            map.put("quantity", quantity);
+            EntityFactory.create(new AisleArticles(), map);
         }
         else
         {

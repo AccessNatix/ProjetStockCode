@@ -39,4 +39,8 @@ public class CashRegisterHelper {
         }
         return false;
     }
+    
+    public void close(){
+        open = false;
+    }
 }

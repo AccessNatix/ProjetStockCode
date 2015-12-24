@@ -22,7 +22,7 @@ import modele.entity.Key;
  * @author yo
  */
 public class KeyJpaController implements Serializable {
-    
+
     private static KeyJpaController singleton = null;
     
     

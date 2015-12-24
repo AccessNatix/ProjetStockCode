@@ -27,7 +27,8 @@ import javax.persistence.Table;
 @Table(name = "transaction")
 @NamedQueries({
     @NamedQuery(name = "Transaction.findAll", query = "SELECT t FROM Transaction t"),
-    @NamedQuery(name = "Transaction.findById", query = "SELECT t FROM Transaction t WHERE t.id = :id")})
+    @NamedQuery(name = "Transaction.findById", query = "SELECT t FROM Transaction t WHERE t.id = :id"),
+    @NamedQuery(name = "Transaction.findByType", query = "SELECT t FROM Transaction t WHERE t.type = :type")})
 public class Transaction implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,6 +37,9 @@ public class Transaction implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Basic(optional = false)
+    @Column(name = "type")
+    private String type;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transactionId")
     private Collection<SessionTransactions> sessionTransactionsCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transactionId")
@@ -50,12 +54,25 @@ public class Transaction implements Serializable {
         this.id = id;
     }
 
+    public Transaction(Integer id, String type) {
+        this.id = id;
+        this.type = type;
+    }
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Collection<SessionTransactions> getSessionTransactionsCollection() {

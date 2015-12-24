@@ -27,7 +27,7 @@ import modele.entity.RetailerCommands;
  * @author yo
  */
 public class CommandJpaController implements Serializable {
-    
+
     private static CommandJpaController singleton = null;
     
     

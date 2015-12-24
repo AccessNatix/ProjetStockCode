@@ -22,7 +22,7 @@ import modele.entity.Employee;
  * @author yo
  */
 public class CashierJpaController implements Serializable {
-    
+
     private static CashierJpaController singleton = null;
     
     

@@ -25,7 +25,7 @@ import modele.entity.CashRegister;
  * @author yo
  */
 public class CashRegisterJpaController implements Serializable {
-    
+
     private static CashRegisterJpaController singleton = null;
     
     

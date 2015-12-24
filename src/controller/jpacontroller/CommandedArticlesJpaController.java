@@ -23,7 +23,7 @@ import modele.entity.CommandedArticles;
  * @author yo
  */
 public class CommandedArticlesJpaController implements Serializable {
-    
+
     private static CommandedArticlesJpaController singleton = null;
     
     

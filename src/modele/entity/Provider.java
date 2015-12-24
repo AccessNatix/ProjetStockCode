@@ -48,9 +48,6 @@ public class Provider implements Serializable {
     @Column(name = "phone")
     private String phone;
     @Basic(optional = false)
-    @Column(name = "barcode")
-    private String barcode;
-    @Basic(optional = false)
     @Column(name = "adress")
     private String adress;
     @Basic(optional = false)
@@ -68,11 +65,10 @@ public class Provider implements Serializable {
         this.id = id;
     }
 
-    public Provider(Integer id, String name, String phone, String barcode, String adress, String postalCode) {
+    public Provider(Integer id, String name, String phone, String adress, String postalCode) {
         this.id = id;
         this.name = name;
         this.phone = phone;
-        this.barcode = barcode;
         this.adress = adress;
         this.postalCode = postalCode;
     }
@@ -99,14 +95,6 @@ public class Provider implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getBarcode() {
-        return barcode;
-    }
-
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
     }
 
     public String getAdress() {

@@ -5,9 +5,11 @@
  */
 package modele.entity.handler;
 
+import java.util.List;
 import modele.entity.Article;
-import modele.entity.CashRegister;
 import modele.entity.Cashier;
+import modele.entity.Key;
+import modele.entity.TransactionArticles;
 
 /**
  *
@@ -35,5 +37,23 @@ public class CashierHandler {
     public boolean connect(String pseudo, String password){
         return this.aCashRegisterHelper.connect(pseudo, password);
     }
+    
+    public boolean pay(String type){
+        return aTransactionHelper.payTransaction(type);
+    }
+    
+    public boolean open(Key key){
+        return aCashRegisterHelper.open(key);
+    }
+    
+    public boolean cancelTranslation(){
+        aCashRegisterHelper.close();
+        return aTransactionHelper.cancelTransaction();
+    }
+    
+    public List<TransactionArticles> getTransactionArticles(){ // print
+        return aTransactionHelper.getArticles();
+    }
+    
     
 }

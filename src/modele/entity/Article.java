@@ -40,11 +40,6 @@ import javax.persistence.Table;
     @NamedQuery(name = "Article.findByType", query = "SELECT a FROM Article a WHERE a.type = :type")})
 public class Article implements Serializable {
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "articleId")
-    private WarehouseArticles warehouseArticles;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "articleId")
-    private AisleArticles aisleArticles;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,10 +72,10 @@ public class Article implements Serializable {
     @JoinColumn(name = "provider_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Provider providerId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "articleId")
-    private Collection<WarehouseArticles> warehouseArticlesCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "articleId")
-    private Collection<AisleArticles> aisleArticlesCollection;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "articleId")
+    private WarehouseArticles warehouseArticles;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "articleId")
+    private AisleArticles aisleArticles;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "articleId")
     private Collection<TransactionArticles> transactionArticlesCollection;
 
@@ -181,20 +176,20 @@ public class Article implements Serializable {
         this.providerId = providerId;
     }
 
-    public Collection<WarehouseArticles> getWarehouseArticlesCollection() {
-        return warehouseArticlesCollection;
+    public WarehouseArticles getWarehouseArticles() {
+        return warehouseArticles;
     }
 
-    public void setWarehouseArticlesCollection(Collection<WarehouseArticles> warehouseArticlesCollection) {
-        this.warehouseArticlesCollection = warehouseArticlesCollection;
+    public void setWarehouseArticles(WarehouseArticles warehouseArticles) {
+        this.warehouseArticles = warehouseArticles;
     }
 
-    public Collection<AisleArticles> getAisleArticlesCollection() {
-        return aisleArticlesCollection;
+    public AisleArticles getAisleArticles() {
+        return aisleArticles;
     }
 
-    public void setAisleArticlesCollection(Collection<AisleArticles> aisleArticlesCollection) {
-        this.aisleArticlesCollection = aisleArticlesCollection;
+    public void setAisleArticles(AisleArticles aisleArticles) {
+        this.aisleArticles = aisleArticles;
     }
 
     public Collection<TransactionArticles> getTransactionArticlesCollection() {
@@ -228,22 +223,6 @@ public class Article implements Serializable {
     @Override
     public String toString() {
         return "modele.entity.Article[ id=" + id + " ]";
-    }
-
-    public WarehouseArticles getWarehouseArticles() {
-        return warehouseArticles;
-    }
-
-    public void setWarehouseArticles(WarehouseArticles warehouseArticles) {
-        this.warehouseArticles = warehouseArticles;
-    }
-
-    public AisleArticles getAisleArticles() {
-        return aisleArticles;
-    }
-
-    public void setAisleArticles(AisleArticles aisleArticles) {
-        this.aisleArticles = aisleArticles;
     }
     
 }

@@ -1,11 +1,12 @@
 package modele;
 
 import controller.jpacontroller.WarehouseArticlesJpaController;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import modele.entity.AisleArticles;
 import modele.entity.Article;
 import modele.entity.WarehouseArticles;
+import modele.entity.factory.EntityFactory;
 
 /**
  *
@@ -38,10 +39,10 @@ public class ManagerWarehouse {
          
         if(tmp == null)
         {
-            tmp = new WarehouseArticles();
-            tmp.setArticleId(article);
-            tmp.setQuantity(quantity);
-            this.aWarehouseController.create(tmp);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("article", article);
+            map.put("quantity", quantity);
+            EntityFactory.create(new WarehouseArticles(), map);
         }
         else
         {

@@ -5,24 +5,26 @@
  */
 package controller.jpacontroller;
 
+import controller.jpacontroller.exceptions.IllegalOrphanException;
 import controller.jpacontroller.exceptions.NonexistentEntityException;
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import modele.entity.AisleArticles;
 import modele.entity.Article;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import modele.entity.AisleArticles;
 
 /**
  *
  * @author yo
  */
 public class AisleArticlesJpaController implements Serializable {
-    
+
     private static AisleArticlesJpaController singleton = null;
     
     
@@ -40,7 +42,21 @@ public class AisleArticlesJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(AisleArticles aisleArticles) {
+    public void create(AisleArticles aisleArticles) throws IllegalOrphanException {
+        List<String> illegalOrphanMessages = null;
+        Article articleIdOrphanCheck = aisleArticles.getArticleId();
+        if (articleIdOrphanCheck != null) {
+            AisleArticles oldAisleArticlesOfArticleId = articleIdOrphanCheck.getAisleArticles();
+            if (oldAisleArticlesOfArticleId != null) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("The Article " + articleIdOrphanCheck + " already has an item of type AisleArticles whose articleId column cannot be null. Please make another selection for the articleId field.");
+            }
+        }
+        if (illegalOrphanMessages != null) {
+            throw new IllegalOrphanException(illegalOrphanMessages);
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -52,7 +68,7 @@ public class AisleArticlesJpaController implements Serializable {
             }
             em.persist(aisleArticles);
             if (articleId != null) {
-                articleId.getAisleArticlesCollection().add(aisleArticles);
+                articleId.setAisleArticles(aisleArticles);
                 articleId = em.merge(articleId);
             }
             em.getTransaction().commit();
@@ -63,7 +79,7 @@ public class AisleArticlesJpaController implements Serializable {
         }
     }
 
-    public void edit(AisleArticles aisleArticles) throws NonexistentEntityException, Exception {
+    public void edit(AisleArticles aisleArticles) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -71,17 +87,30 @@ public class AisleArticlesJpaController implements Serializable {
             AisleArticles persistentAisleArticles = em.find(AisleArticles.class, aisleArticles.getId());
             Article articleIdOld = persistentAisleArticles.getArticleId();
             Article articleIdNew = aisleArticles.getArticleId();
+            List<String> illegalOrphanMessages = null;
+            if (articleIdNew != null && !articleIdNew.equals(articleIdOld)) {
+                AisleArticles oldAisleArticlesOfArticleId = articleIdNew.getAisleArticles();
+                if (oldAisleArticlesOfArticleId != null) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("The Article " + articleIdNew + " already has an item of type AisleArticles whose articleId column cannot be null. Please make another selection for the articleId field.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
             if (articleIdNew != null) {
                 articleIdNew = em.getReference(articleIdNew.getClass(), articleIdNew.getId());
                 aisleArticles.setArticleId(articleIdNew);
             }
             aisleArticles = em.merge(aisleArticles);
             if (articleIdOld != null && !articleIdOld.equals(articleIdNew)) {
-                articleIdOld.getAisleArticlesCollection().remove(aisleArticles);
+                articleIdOld.setAisleArticles(null);
                 articleIdOld = em.merge(articleIdOld);
             }
             if (articleIdNew != null && !articleIdNew.equals(articleIdOld)) {
-                articleIdNew.getAisleArticlesCollection().add(aisleArticles);
+                articleIdNew.setAisleArticles(aisleArticles);
                 articleIdNew = em.merge(articleIdNew);
             }
             em.getTransaction().commit();
@@ -115,7 +144,7 @@ public class AisleArticlesJpaController implements Serializable {
             }
             Article articleId = aisleArticles.getArticleId();
             if (articleId != null) {
-                articleId.getAisleArticlesCollection().remove(aisleArticles);
+                articleId.setAisleArticles(null);
                 articleId = em.merge(articleId);
             }
             em.remove(aisleArticles);

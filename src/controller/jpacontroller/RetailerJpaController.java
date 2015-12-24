@@ -26,7 +26,7 @@ import modele.entity.Retailer;
  * @author yo
  */
 public class RetailerJpaController implements Serializable {
-    
+
     private static RetailerJpaController singleton = null;
     
     

@@ -25,7 +25,7 @@ import modele.entity.Session;
  * @author yo
  */
 public class SessionJpaController implements Serializable {
-    
+
     private static SessionJpaController singleton = null;
     
     

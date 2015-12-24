@@ -23,7 +23,7 @@ import modele.entity.ClientArticles;
  * @author yo
  */
 public class ClientArticlesJpaController implements Serializable {
-    
+
     private static ClientArticlesJpaController singleton = null;
     
     

@@ -5,16 +5,18 @@
  */
 package controller.jpacontroller;
 
+import controller.jpacontroller.exceptions.IllegalOrphanException;
 import controller.jpacontroller.exceptions.NonexistentEntityException;
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import modele.entity.Article;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import modele.entity.WarehouseArticles;
 
 /**
@@ -22,7 +24,7 @@ import modele.entity.WarehouseArticles;
  * @author yo
  */
 public class WarehouseArticlesJpaController implements Serializable {
-    
+
     private static WarehouseArticlesJpaController singleton = null;
     
     
@@ -40,7 +42,21 @@ public class WarehouseArticlesJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(WarehouseArticles warehouseArticles) {
+    public void create(WarehouseArticles warehouseArticles) throws IllegalOrphanException {
+        List<String> illegalOrphanMessages = null;
+        Article articleIdOrphanCheck = warehouseArticles.getArticleId();
+        if (articleIdOrphanCheck != null) {
+            WarehouseArticles oldWarehouseArticlesOfArticleId = articleIdOrphanCheck.getWarehouseArticles();
+            if (oldWarehouseArticlesOfArticleId != null) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("The Article " + articleIdOrphanCheck + " already has an item of type WarehouseArticles whose articleId column cannot be null. Please make another selection for the articleId field.");
+            }
+        }
+        if (illegalOrphanMessages != null) {
+            throw new IllegalOrphanException(illegalOrphanMessages);
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -52,7 +68,7 @@ public class WarehouseArticlesJpaController implements Serializable {
             }
             em.persist(warehouseArticles);
             if (articleId != null) {
-                articleId.getWarehouseArticlesCollection().add(warehouseArticles);
+                articleId.setWarehouseArticles(warehouseArticles);
                 articleId = em.merge(articleId);
             }
             em.getTransaction().commit();
@@ -63,7 +79,7 @@ public class WarehouseArticlesJpaController implements Serializable {
         }
     }
 
-    public void edit(WarehouseArticles warehouseArticles) throws NonexistentEntityException, Exception {
+    public void edit(WarehouseArticles warehouseArticles) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -71,17 +87,30 @@ public class WarehouseArticlesJpaController implements Serializable {
             WarehouseArticles persistentWarehouseArticles = em.find(WarehouseArticles.class, warehouseArticles.getId());
             Article articleIdOld = persistentWarehouseArticles.getArticleId();
             Article articleIdNew = warehouseArticles.getArticleId();
+            List<String> illegalOrphanMessages = null;
+            if (articleIdNew != null && !articleIdNew.equals(articleIdOld)) {
+                WarehouseArticles oldWarehouseArticlesOfArticleId = articleIdNew.getWarehouseArticles();
+                if (oldWarehouseArticlesOfArticleId != null) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("The Article " + articleIdNew + " already has an item of type WarehouseArticles whose articleId column cannot be null. Please make another selection for the articleId field.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
             if (articleIdNew != null) {
                 articleIdNew = em.getReference(articleIdNew.getClass(), articleIdNew.getId());
                 warehouseArticles.setArticleId(articleIdNew);
             }
             warehouseArticles = em.merge(warehouseArticles);
             if (articleIdOld != null && !articleIdOld.equals(articleIdNew)) {
-                articleIdOld.getWarehouseArticlesCollection().remove(warehouseArticles);
+                articleIdOld.setWarehouseArticles(null);
                 articleIdOld = em.merge(articleIdOld);
             }
             if (articleIdNew != null && !articleIdNew.equals(articleIdOld)) {
-                articleIdNew.getWarehouseArticlesCollection().add(warehouseArticles);
+                articleIdNew.setWarehouseArticles(warehouseArticles);
                 articleIdNew = em.merge(articleIdNew);
             }
             em.getTransaction().commit();
@@ -115,7 +144,7 @@ public class WarehouseArticlesJpaController implements Serializable {
             }
             Article articleId = warehouseArticles.getArticleId();
             if (articleId != null) {
-                articleId.getWarehouseArticlesCollection().remove(warehouseArticles);
+                articleId.setWarehouseArticles(null);
                 articleId = em.merge(articleId);
             }
             em.remove(warehouseArticles);

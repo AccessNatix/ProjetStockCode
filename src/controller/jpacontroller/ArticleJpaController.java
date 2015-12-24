@@ -13,16 +13,16 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import modele.entity.Provider;
+import modele.entity.WarehouseArticles;
+import modele.entity.AisleArticles;
 import modele.entity.ClientArticles;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import modele.entity.CommandedArticles;
-import modele.entity.WarehouseArticles;
-import modele.entity.AisleArticles;
 import modele.entity.Article;
+import modele.entity.CommandedArticles;
 import modele.entity.TransactionArticles;
 
 /**
@@ -30,7 +30,7 @@ import modele.entity.TransactionArticles;
  * @author yo
  */
 public class ArticleJpaController implements Serializable {
-    
+
     private static ArticleJpaController singleton = null;
     
     
@@ -55,12 +55,6 @@ public class ArticleJpaController implements Serializable {
         if (article.getCommandedArticlesCollection() == null) {
             article.setCommandedArticlesCollection(new ArrayList<CommandedArticles>());
         }
-        if (article.getWarehouseArticlesCollection() == null) {
-            article.setWarehouseArticlesCollection(new ArrayList<WarehouseArticles>());
-        }
-        if (article.getAisleArticlesCollection() == null) {
-            article.setAisleArticlesCollection(new ArrayList<AisleArticles>());
-        }
         if (article.getTransactionArticlesCollection() == null) {
             article.setTransactionArticlesCollection(new ArrayList<TransactionArticles>());
         }
@@ -72,6 +66,16 @@ public class ArticleJpaController implements Serializable {
             if (providerId != null) {
                 providerId = em.getReference(providerId.getClass(), providerId.getId());
                 article.setProviderId(providerId);
+            }
+            WarehouseArticles warehouseArticles = article.getWarehouseArticles();
+            if (warehouseArticles != null) {
+                warehouseArticles = em.getReference(warehouseArticles.getClass(), warehouseArticles.getId());
+                article.setWarehouseArticles(warehouseArticles);
+            }
+            AisleArticles aisleArticles = article.getAisleArticles();
+            if (aisleArticles != null) {
+                aisleArticles = em.getReference(aisleArticles.getClass(), aisleArticles.getId());
+                article.setAisleArticles(aisleArticles);
             }
             Collection<ClientArticles> attachedClientArticlesCollection = new ArrayList<ClientArticles>();
             for (ClientArticles clientArticlesCollectionClientArticlesToAttach : article.getClientArticlesCollection()) {
@@ -85,18 +89,6 @@ public class ArticleJpaController implements Serializable {
                 attachedCommandedArticlesCollection.add(commandedArticlesCollectionCommandedArticlesToAttach);
             }
             article.setCommandedArticlesCollection(attachedCommandedArticlesCollection);
-            Collection<WarehouseArticles> attachedWarehouseArticlesCollection = new ArrayList<WarehouseArticles>();
-            for (WarehouseArticles warehouseArticlesCollectionWarehouseArticlesToAttach : article.getWarehouseArticlesCollection()) {
-                warehouseArticlesCollectionWarehouseArticlesToAttach = em.getReference(warehouseArticlesCollectionWarehouseArticlesToAttach.getClass(), warehouseArticlesCollectionWarehouseArticlesToAttach.getId());
-                attachedWarehouseArticlesCollection.add(warehouseArticlesCollectionWarehouseArticlesToAttach);
-            }
-            article.setWarehouseArticlesCollection(attachedWarehouseArticlesCollection);
-            Collection<AisleArticles> attachedAisleArticlesCollection = new ArrayList<AisleArticles>();
-            for (AisleArticles aisleArticlesCollectionAisleArticlesToAttach : article.getAisleArticlesCollection()) {
-                aisleArticlesCollectionAisleArticlesToAttach = em.getReference(aisleArticlesCollectionAisleArticlesToAttach.getClass(), aisleArticlesCollectionAisleArticlesToAttach.getId());
-                attachedAisleArticlesCollection.add(aisleArticlesCollectionAisleArticlesToAttach);
-            }
-            article.setAisleArticlesCollection(attachedAisleArticlesCollection);
             Collection<TransactionArticles> attachedTransactionArticlesCollection = new ArrayList<TransactionArticles>();
             for (TransactionArticles transactionArticlesCollectionTransactionArticlesToAttach : article.getTransactionArticlesCollection()) {
                 transactionArticlesCollectionTransactionArticlesToAttach = em.getReference(transactionArticlesCollectionTransactionArticlesToAttach.getClass(), transactionArticlesCollectionTransactionArticlesToAttach.getId());
@@ -107,6 +99,24 @@ public class ArticleJpaController implements Serializable {
             if (providerId != null) {
                 providerId.getArticleCollection().add(article);
                 providerId = em.merge(providerId);
+            }
+            if (warehouseArticles != null) {
+                Article oldArticleIdOfWarehouseArticles = warehouseArticles.getArticleId();
+                if (oldArticleIdOfWarehouseArticles != null) {
+                    oldArticleIdOfWarehouseArticles.setWarehouseArticles(null);
+                    oldArticleIdOfWarehouseArticles = em.merge(oldArticleIdOfWarehouseArticles);
+                }
+                warehouseArticles.setArticleId(article);
+                warehouseArticles = em.merge(warehouseArticles);
+            }
+            if (aisleArticles != null) {
+                Article oldArticleIdOfAisleArticles = aisleArticles.getArticleId();
+                if (oldArticleIdOfAisleArticles != null) {
+                    oldArticleIdOfAisleArticles.setAisleArticles(null);
+                    oldArticleIdOfAisleArticles = em.merge(oldArticleIdOfAisleArticles);
+                }
+                aisleArticles.setArticleId(article);
+                aisleArticles = em.merge(aisleArticles);
             }
             for (ClientArticles clientArticlesCollectionClientArticles : article.getClientArticlesCollection()) {
                 Article oldArticleIdOfClientArticlesCollectionClientArticles = clientArticlesCollectionClientArticles.getArticleId();
@@ -124,24 +134,6 @@ public class ArticleJpaController implements Serializable {
                 if (oldArticleIdOfCommandedArticlesCollectionCommandedArticles != null) {
                     oldArticleIdOfCommandedArticlesCollectionCommandedArticles.getCommandedArticlesCollection().remove(commandedArticlesCollectionCommandedArticles);
                     oldArticleIdOfCommandedArticlesCollectionCommandedArticles = em.merge(oldArticleIdOfCommandedArticlesCollectionCommandedArticles);
-                }
-            }
-            for (WarehouseArticles warehouseArticlesCollectionWarehouseArticles : article.getWarehouseArticlesCollection()) {
-                Article oldArticleIdOfWarehouseArticlesCollectionWarehouseArticles = warehouseArticlesCollectionWarehouseArticles.getArticleId();
-                warehouseArticlesCollectionWarehouseArticles.setArticleId(article);
-                warehouseArticlesCollectionWarehouseArticles = em.merge(warehouseArticlesCollectionWarehouseArticles);
-                if (oldArticleIdOfWarehouseArticlesCollectionWarehouseArticles != null) {
-                    oldArticleIdOfWarehouseArticlesCollectionWarehouseArticles.getWarehouseArticlesCollection().remove(warehouseArticlesCollectionWarehouseArticles);
-                    oldArticleIdOfWarehouseArticlesCollectionWarehouseArticles = em.merge(oldArticleIdOfWarehouseArticlesCollectionWarehouseArticles);
-                }
-            }
-            for (AisleArticles aisleArticlesCollectionAisleArticles : article.getAisleArticlesCollection()) {
-                Article oldArticleIdOfAisleArticlesCollectionAisleArticles = aisleArticlesCollectionAisleArticles.getArticleId();
-                aisleArticlesCollectionAisleArticles.setArticleId(article);
-                aisleArticlesCollectionAisleArticles = em.merge(aisleArticlesCollectionAisleArticles);
-                if (oldArticleIdOfAisleArticlesCollectionAisleArticles != null) {
-                    oldArticleIdOfAisleArticlesCollectionAisleArticles.getAisleArticlesCollection().remove(aisleArticlesCollectionAisleArticles);
-                    oldArticleIdOfAisleArticlesCollectionAisleArticles = em.merge(oldArticleIdOfAisleArticlesCollectionAisleArticles);
                 }
             }
             for (TransactionArticles transactionArticlesCollectionTransactionArticles : article.getTransactionArticlesCollection()) {
@@ -169,17 +161,29 @@ public class ArticleJpaController implements Serializable {
             Article persistentArticle = em.find(Article.class, article.getId());
             Provider providerIdOld = persistentArticle.getProviderId();
             Provider providerIdNew = article.getProviderId();
+            WarehouseArticles warehouseArticlesOld = persistentArticle.getWarehouseArticles();
+            WarehouseArticles warehouseArticlesNew = article.getWarehouseArticles();
+            AisleArticles aisleArticlesOld = persistentArticle.getAisleArticles();
+            AisleArticles aisleArticlesNew = article.getAisleArticles();
             Collection<ClientArticles> clientArticlesCollectionOld = persistentArticle.getClientArticlesCollection();
             Collection<ClientArticles> clientArticlesCollectionNew = article.getClientArticlesCollection();
             Collection<CommandedArticles> commandedArticlesCollectionOld = persistentArticle.getCommandedArticlesCollection();
             Collection<CommandedArticles> commandedArticlesCollectionNew = article.getCommandedArticlesCollection();
-            Collection<WarehouseArticles> warehouseArticlesCollectionOld = persistentArticle.getWarehouseArticlesCollection();
-            Collection<WarehouseArticles> warehouseArticlesCollectionNew = article.getWarehouseArticlesCollection();
-            Collection<AisleArticles> aisleArticlesCollectionOld = persistentArticle.getAisleArticlesCollection();
-            Collection<AisleArticles> aisleArticlesCollectionNew = article.getAisleArticlesCollection();
             Collection<TransactionArticles> transactionArticlesCollectionOld = persistentArticle.getTransactionArticlesCollection();
             Collection<TransactionArticles> transactionArticlesCollectionNew = article.getTransactionArticlesCollection();
             List<String> illegalOrphanMessages = null;
+            if (warehouseArticlesOld != null && !warehouseArticlesOld.equals(warehouseArticlesNew)) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("You must retain WarehouseArticles " + warehouseArticlesOld + " since its articleId field is not nullable.");
+            }
+            if (aisleArticlesOld != null && !aisleArticlesOld.equals(aisleArticlesNew)) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("You must retain AisleArticles " + aisleArticlesOld + " since its articleId field is not nullable.");
+            }
             for (ClientArticles clientArticlesCollectionOldClientArticles : clientArticlesCollectionOld) {
                 if (!clientArticlesCollectionNew.contains(clientArticlesCollectionOldClientArticles)) {
                     if (illegalOrphanMessages == null) {
@@ -194,22 +198,6 @@ public class ArticleJpaController implements Serializable {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
                     illegalOrphanMessages.add("You must retain CommandedArticles " + commandedArticlesCollectionOldCommandedArticles + " since its articleId field is not nullable.");
-                }
-            }
-            for (WarehouseArticles warehouseArticlesCollectionOldWarehouseArticles : warehouseArticlesCollectionOld) {
-                if (!warehouseArticlesCollectionNew.contains(warehouseArticlesCollectionOldWarehouseArticles)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain WarehouseArticles " + warehouseArticlesCollectionOldWarehouseArticles + " since its articleId field is not nullable.");
-                }
-            }
-            for (AisleArticles aisleArticlesCollectionOldAisleArticles : aisleArticlesCollectionOld) {
-                if (!aisleArticlesCollectionNew.contains(aisleArticlesCollectionOldAisleArticles)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain AisleArticles " + aisleArticlesCollectionOldAisleArticles + " since its articleId field is not nullable.");
                 }
             }
             for (TransactionArticles transactionArticlesCollectionOldTransactionArticles : transactionArticlesCollectionOld) {
@@ -227,6 +215,14 @@ public class ArticleJpaController implements Serializable {
                 providerIdNew = em.getReference(providerIdNew.getClass(), providerIdNew.getId());
                 article.setProviderId(providerIdNew);
             }
+            if (warehouseArticlesNew != null) {
+                warehouseArticlesNew = em.getReference(warehouseArticlesNew.getClass(), warehouseArticlesNew.getId());
+                article.setWarehouseArticles(warehouseArticlesNew);
+            }
+            if (aisleArticlesNew != null) {
+                aisleArticlesNew = em.getReference(aisleArticlesNew.getClass(), aisleArticlesNew.getId());
+                article.setAisleArticles(aisleArticlesNew);
+            }
             Collection<ClientArticles> attachedClientArticlesCollectionNew = new ArrayList<ClientArticles>();
             for (ClientArticles clientArticlesCollectionNewClientArticlesToAttach : clientArticlesCollectionNew) {
                 clientArticlesCollectionNewClientArticlesToAttach = em.getReference(clientArticlesCollectionNewClientArticlesToAttach.getClass(), clientArticlesCollectionNewClientArticlesToAttach.getId());
@@ -241,20 +237,6 @@ public class ArticleJpaController implements Serializable {
             }
             commandedArticlesCollectionNew = attachedCommandedArticlesCollectionNew;
             article.setCommandedArticlesCollection(commandedArticlesCollectionNew);
-            Collection<WarehouseArticles> attachedWarehouseArticlesCollectionNew = new ArrayList<WarehouseArticles>();
-            for (WarehouseArticles warehouseArticlesCollectionNewWarehouseArticlesToAttach : warehouseArticlesCollectionNew) {
-                warehouseArticlesCollectionNewWarehouseArticlesToAttach = em.getReference(warehouseArticlesCollectionNewWarehouseArticlesToAttach.getClass(), warehouseArticlesCollectionNewWarehouseArticlesToAttach.getId());
-                attachedWarehouseArticlesCollectionNew.add(warehouseArticlesCollectionNewWarehouseArticlesToAttach);
-            }
-            warehouseArticlesCollectionNew = attachedWarehouseArticlesCollectionNew;
-            article.setWarehouseArticlesCollection(warehouseArticlesCollectionNew);
-            Collection<AisleArticles> attachedAisleArticlesCollectionNew = new ArrayList<AisleArticles>();
-            for (AisleArticles aisleArticlesCollectionNewAisleArticlesToAttach : aisleArticlesCollectionNew) {
-                aisleArticlesCollectionNewAisleArticlesToAttach = em.getReference(aisleArticlesCollectionNewAisleArticlesToAttach.getClass(), aisleArticlesCollectionNewAisleArticlesToAttach.getId());
-                attachedAisleArticlesCollectionNew.add(aisleArticlesCollectionNewAisleArticlesToAttach);
-            }
-            aisleArticlesCollectionNew = attachedAisleArticlesCollectionNew;
-            article.setAisleArticlesCollection(aisleArticlesCollectionNew);
             Collection<TransactionArticles> attachedTransactionArticlesCollectionNew = new ArrayList<TransactionArticles>();
             for (TransactionArticles transactionArticlesCollectionNewTransactionArticlesToAttach : transactionArticlesCollectionNew) {
                 transactionArticlesCollectionNewTransactionArticlesToAttach = em.getReference(transactionArticlesCollectionNewTransactionArticlesToAttach.getClass(), transactionArticlesCollectionNewTransactionArticlesToAttach.getId());
@@ -270,6 +252,24 @@ public class ArticleJpaController implements Serializable {
             if (providerIdNew != null && !providerIdNew.equals(providerIdOld)) {
                 providerIdNew.getArticleCollection().add(article);
                 providerIdNew = em.merge(providerIdNew);
+            }
+            if (warehouseArticlesNew != null && !warehouseArticlesNew.equals(warehouseArticlesOld)) {
+                Article oldArticleIdOfWarehouseArticles = warehouseArticlesNew.getArticleId();
+                if (oldArticleIdOfWarehouseArticles != null) {
+                    oldArticleIdOfWarehouseArticles.setWarehouseArticles(null);
+                    oldArticleIdOfWarehouseArticles = em.merge(oldArticleIdOfWarehouseArticles);
+                }
+                warehouseArticlesNew.setArticleId(article);
+                warehouseArticlesNew = em.merge(warehouseArticlesNew);
+            }
+            if (aisleArticlesNew != null && !aisleArticlesNew.equals(aisleArticlesOld)) {
+                Article oldArticleIdOfAisleArticles = aisleArticlesNew.getArticleId();
+                if (oldArticleIdOfAisleArticles != null) {
+                    oldArticleIdOfAisleArticles.setAisleArticles(null);
+                    oldArticleIdOfAisleArticles = em.merge(oldArticleIdOfAisleArticles);
+                }
+                aisleArticlesNew.setArticleId(article);
+                aisleArticlesNew = em.merge(aisleArticlesNew);
             }
             for (ClientArticles clientArticlesCollectionNewClientArticles : clientArticlesCollectionNew) {
                 if (!clientArticlesCollectionOld.contains(clientArticlesCollectionNewClientArticles)) {
@@ -290,28 +290,6 @@ public class ArticleJpaController implements Serializable {
                     if (oldArticleIdOfCommandedArticlesCollectionNewCommandedArticles != null && !oldArticleIdOfCommandedArticlesCollectionNewCommandedArticles.equals(article)) {
                         oldArticleIdOfCommandedArticlesCollectionNewCommandedArticles.getCommandedArticlesCollection().remove(commandedArticlesCollectionNewCommandedArticles);
                         oldArticleIdOfCommandedArticlesCollectionNewCommandedArticles = em.merge(oldArticleIdOfCommandedArticlesCollectionNewCommandedArticles);
-                    }
-                }
-            }
-            for (WarehouseArticles warehouseArticlesCollectionNewWarehouseArticles : warehouseArticlesCollectionNew) {
-                if (!warehouseArticlesCollectionOld.contains(warehouseArticlesCollectionNewWarehouseArticles)) {
-                    Article oldArticleIdOfWarehouseArticlesCollectionNewWarehouseArticles = warehouseArticlesCollectionNewWarehouseArticles.getArticleId();
-                    warehouseArticlesCollectionNewWarehouseArticles.setArticleId(article);
-                    warehouseArticlesCollectionNewWarehouseArticles = em.merge(warehouseArticlesCollectionNewWarehouseArticles);
-                    if (oldArticleIdOfWarehouseArticlesCollectionNewWarehouseArticles != null && !oldArticleIdOfWarehouseArticlesCollectionNewWarehouseArticles.equals(article)) {
-                        oldArticleIdOfWarehouseArticlesCollectionNewWarehouseArticles.getWarehouseArticlesCollection().remove(warehouseArticlesCollectionNewWarehouseArticles);
-                        oldArticleIdOfWarehouseArticlesCollectionNewWarehouseArticles = em.merge(oldArticleIdOfWarehouseArticlesCollectionNewWarehouseArticles);
-                    }
-                }
-            }
-            for (AisleArticles aisleArticlesCollectionNewAisleArticles : aisleArticlesCollectionNew) {
-                if (!aisleArticlesCollectionOld.contains(aisleArticlesCollectionNewAisleArticles)) {
-                    Article oldArticleIdOfAisleArticlesCollectionNewAisleArticles = aisleArticlesCollectionNewAisleArticles.getArticleId();
-                    aisleArticlesCollectionNewAisleArticles.setArticleId(article);
-                    aisleArticlesCollectionNewAisleArticles = em.merge(aisleArticlesCollectionNewAisleArticles);
-                    if (oldArticleIdOfAisleArticlesCollectionNewAisleArticles != null && !oldArticleIdOfAisleArticlesCollectionNewAisleArticles.equals(article)) {
-                        oldArticleIdOfAisleArticlesCollectionNewAisleArticles.getAisleArticlesCollection().remove(aisleArticlesCollectionNewAisleArticles);
-                        oldArticleIdOfAisleArticlesCollectionNewAisleArticles = em.merge(oldArticleIdOfAisleArticlesCollectionNewAisleArticles);
                     }
                 }
             }
@@ -356,6 +334,20 @@ public class ArticleJpaController implements Serializable {
                 throw new NonexistentEntityException("The article with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
+            WarehouseArticles warehouseArticlesOrphanCheck = article.getWarehouseArticles();
+            if (warehouseArticlesOrphanCheck != null) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Article (" + article + ") cannot be destroyed since the WarehouseArticles " + warehouseArticlesOrphanCheck + " in its warehouseArticles field has a non-nullable articleId field.");
+            }
+            AisleArticles aisleArticlesOrphanCheck = article.getAisleArticles();
+            if (aisleArticlesOrphanCheck != null) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Article (" + article + ") cannot be destroyed since the AisleArticles " + aisleArticlesOrphanCheck + " in its aisleArticles field has a non-nullable articleId field.");
+            }
             Collection<ClientArticles> clientArticlesCollectionOrphanCheck = article.getClientArticlesCollection();
             for (ClientArticles clientArticlesCollectionOrphanCheckClientArticles : clientArticlesCollectionOrphanCheck) {
                 if (illegalOrphanMessages == null) {
@@ -369,20 +361,6 @@ public class ArticleJpaController implements Serializable {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
                 illegalOrphanMessages.add("This Article (" + article + ") cannot be destroyed since the CommandedArticles " + commandedArticlesCollectionOrphanCheckCommandedArticles + " in its commandedArticlesCollection field has a non-nullable articleId field.");
-            }
-            Collection<WarehouseArticles> warehouseArticlesCollectionOrphanCheck = article.getWarehouseArticlesCollection();
-            for (WarehouseArticles warehouseArticlesCollectionOrphanCheckWarehouseArticles : warehouseArticlesCollectionOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Article (" + article + ") cannot be destroyed since the WarehouseArticles " + warehouseArticlesCollectionOrphanCheckWarehouseArticles + " in its warehouseArticlesCollection field has a non-nullable articleId field.");
-            }
-            Collection<AisleArticles> aisleArticlesCollectionOrphanCheck = article.getAisleArticlesCollection();
-            for (AisleArticles aisleArticlesCollectionOrphanCheckAisleArticles : aisleArticlesCollectionOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Article (" + article + ") cannot be destroyed since the AisleArticles " + aisleArticlesCollectionOrphanCheckAisleArticles + " in its aisleArticlesCollection field has a non-nullable articleId field.");
             }
             Collection<TransactionArticles> transactionArticlesCollectionOrphanCheck = article.getTransactionArticlesCollection();
             for (TransactionArticles transactionArticlesCollectionOrphanCheckTransactionArticles : transactionArticlesCollectionOrphanCheck) {
