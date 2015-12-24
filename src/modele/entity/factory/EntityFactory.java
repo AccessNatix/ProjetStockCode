@@ -56,7 +56,7 @@ public class EntityFactory {
     public static <T> T create(T t, HashMap<String,Object> attributes){
         if(t.getClass() == AisleArticles.class){
             Article article = (Article) attributes.get("article");
-            int quantity = (int) attributes.get("quantity");
+            int quantity = (Integer) attributes.get("quantity");
             
             AisleArticles aisleArticle = new AisleArticles();
             aisleArticle.setArticleId(article);
@@ -72,8 +72,8 @@ public class EntityFactory {
             String type = (String) attributes.get("type");
             String name = (String) attributes.get("name");
             BigDecimal price = (BigDecimal) attributes.get("price");
-            int stock = (int) attributes.get("stock");
-            int threshold = (int) attributes.get("threshold");
+            int stock = (Integer) attributes.get("stock");
+            int threshold = (Integer) attributes.get("threshold");
             
             Article article = new Article();
             article.setBarcode(barcode);
@@ -127,7 +127,7 @@ public class EntityFactory {
         else if(t.getClass() == ClientArticles.class){
             Article article = (Article) attributes.get("article");
             Client client = (Client) attributes.get("client");
-            int quantity = (int) attributes.get("quantity");
+            int quantity = (Integer) attributes.get("quantity");
             if(SystemStock.getSystemStock().removeArticleFromAisle(article, quantity) == false) return null;
         
             ClientArticles clientArticle = new ClientArticles();
@@ -151,7 +151,7 @@ public class EntityFactory {
         else if(t.getClass() == CommandedArticles.class){
             Article article = (Article) attributes.get("article");
             Command command = (Command) attributes.get("command");
-            int quantity = (int) attributes.get("quantity");
+            int quantity = (Integer) attributes.get("quantity");
             
             CommandedArticles commandedArticles = new CommandedArticles();
             commandedArticles.setArticleId(article);
@@ -254,7 +254,10 @@ public class EntityFactory {
             t = (T) sessionCommand;
         }
         else if(t.getClass() == Transaction.class){
+            String type = (String) attributes.get("type")
+            
             Transaction transaction = new Transaction();
+            transaction.setType(type);
 
             TransactionJpaController.getController().create(transaction);
             
@@ -263,7 +266,7 @@ public class EntityFactory {
         else if(t.getClass() == TransactionArticles.class){
             
             Article article = (Article) attributes.get("article");
-            int quantity = (int) attributes.get("quantity");
+            int quantity = (Integer) attributes.get("quantity");
             Transaction transaction = (Transaction) attributes.get("transaction");
             
             TransactionArticles transactionArticles = new TransactionArticles();
@@ -277,7 +280,7 @@ public class EntityFactory {
         }
         else if(t.getClass() == WarehouseArticles.class){
             Article article = (Article) attributes.get("article");
-            int quantity = (int) attributes.get("quantity");
+            int quantity = (Integer) attributes.get("quantity");
             
             WarehouseArticles warehouseArticle = new WarehouseArticles();
             warehouseArticle.setArticleId(article);
@@ -286,6 +289,9 @@ public class EntityFactory {
             WarehouseArticlesJpaController.getController().create(warehouseArticle);
             
             t = (T) warehouseArticle;
+        }
+        else{
+            t = null;
         }
         return t;
     }

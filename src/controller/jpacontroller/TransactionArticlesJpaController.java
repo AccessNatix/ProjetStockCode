@@ -209,4 +209,13 @@ public class TransactionArticlesJpaController implements Serializable {
             .getResultList();
     }
     
+    public TransactionArticles findByIds(int articleId, int transactionId){
+        List<TransactionArticles> l = getEntityManager().createNamedQuery("TransactionArticles.findByIds")
+            .setParameter("articleId", articleId)
+            .setParameter("transactionId", transactionId)
+            .getResultList();
+        if(l.isEmpty()) return null;
+        return l.get(0);
+    }
+    
 }

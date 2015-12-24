@@ -5,9 +5,9 @@
  */
 package modele.entity.handler;
 
+import modele.entity.Article;
 import modele.entity.CashRegister;
 import modele.entity.Cashier;
-import modele.entity.Transaction;
 
 /**
  *
@@ -16,19 +16,24 @@ import modele.entity.Transaction;
 public class CashierHandler {
     private Cashier aCashier;
     private CashRegisterHelper aCashRegisterHelper;
-    private Transaction aTransaction = null;
+    private TransactionHelper aTransactionHelper = null;
     
-    
-    public CashierHandler(Cashier pCachier, CashRegister pCashRegister){
-        this.aCashier=pCachier;
-        this.aCashRegisterHelper=pCashRegister;
+    public CashierHandler(Cashier pCachier, CashRegisterHelper pCashRegisterHelper){
+        this.aCashier = pCachier;
+        this.aCashRegisterHelper = pCashRegisterHelper;
+        this.aTransactionHelper = new TransactionHelper(aCashRegisterHelper.getSessionHelper());
     }
     
-    public void startTransaction(){
-        aTransaction = createTransaction();
-        
+    public boolean startTransaction(String type){
+        return aTransactionHelper.startTransaction(type);
     }
     
-
+    public boolean addArticle(Article article, int quantity){
+        return aTransactionHelper.addArticle(article, quantity);
+    }
+    
+    public boolean connect(String pseudo, String password){
+        return this.aCashRegisterHelper.connect(pseudo, password);
+    }
     
 }

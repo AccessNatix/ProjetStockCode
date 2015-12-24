@@ -6,7 +6,11 @@
 package modele.entity.handler;
 
 import controller.jpacontroller.SessionJpaController;
+import java.util.HashMap;
 import modele.entity.Session;
+import modele.entity.SessionTransactions;
+import modele.entity.Transaction;
+import modele.entity.factory.EntityFactory;
 
 /**
  *
@@ -24,5 +28,13 @@ public class SessionHelper {
         if(session == null) return false;
         aCurrentSession = session;
         return true;
+    }
+    
+    public boolean addTransaction(Transaction transaction){
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("session", aCurrentSession);
+        map.put("transaction", transaction);
+        SessionTransactions sessionTransactions = EntityFactory.create(new SessionTransactions(), map);
+        return sessionTransactions != null;
     }
 }

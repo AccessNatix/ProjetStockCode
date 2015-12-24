@@ -24,6 +24,10 @@ public class CashRegisterHelper {
         open = false;
     }
     
+    public SessionHelper getSessionHelper(){
+        return aSessionHelper;
+    }
+    
     public boolean connect(String pseudo, String password){
         return aSessionHelper.connect(pseudo, password);
     }

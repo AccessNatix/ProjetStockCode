@@ -68,5 +68,25 @@ public class SystemStock {
             }
         }
         return map;
-}
+    }
+
+	public HashMap<Article,Integer> getStock() {
+        HashMap<Article,Integer> map = new HashMap<>();
+        List<Article> listArticle = ArticleJpaController.getController().findArticleEntities();
+        
+        for(Article article : listArticle){
+            WarehouseArticles warehouseArticle = aWarehouse.getArticleFromWarehouse(article);
+            AisleArticles aisleArticle = aAisle.getArticleFromAisle(article);
+            
+            int warehouseStock = 0;
+            if(warehouseArticle != null) warehouseArticle.getQuantity();
+            int aisleStock = 0;
+            if(aisleArticle != null) aisleArticle.getQuantity();
+            
+            int totalStock = warehouseStock + aisleStock;
+            
+            map.put(article, totalStock);
+        }
+        return map;
+    }
 }
