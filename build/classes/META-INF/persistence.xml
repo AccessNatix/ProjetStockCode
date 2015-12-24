@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="UMLProjectPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>modele.entity.ClientArticles</class>
+    <class>modele.entity.CommandedArticles</class>
+    <class>modele.entity.WarehouseArticles</class>
+    <class>modele.entity.Payment</class>
+    <class>modele.entity.Key</class>
+    <class>modele.entity.Command</class>
+    <class>modele.entity.AisleArticles</class>
+    <class>modele.entity.TransactionArticles</class>
+    <class>modele.entity.Transaction</class>
+    <class>modele.entity.Provider</class>
+    <class>modele.entity.Client</class>
+    <class>modele.entity.Retailer</class>
+    <class>modele.entity.Session</class>
+    <class>modele.entity.CashRegister</class>
+    <class>modele.entity.RetailerCommands</class>
+    <class>modele.entity.Cashier</class>
+    <class>modele.entity.Employee</class>
+    <class>modele.entity.Article</class>
+    <class>modele.entity.SessionTransactions</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/INF-5201C?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="shelsea177"/>
+      <property name="javax.persistence.schema-generation.database.action" value="none"/>
+    </properties>
+  </persistence-unit>
+</persistence>

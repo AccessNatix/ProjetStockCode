@@ -5,9 +5,8 @@
  */
 package modele.entity;
 
-import modele.entity.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -58,9 +57,9 @@ public class Provider implements Serializable {
     @Column(name = "postalCode")
     private String postalCode;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "providerId")
-    private List<Article> articleList;
+    private Collection<Article> articleCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "providerId")
-    private List<Command> commandList;
+    private Collection<Command> commandCollection;
 
     public Provider() {
     }
@@ -126,20 +125,20 @@ public class Provider implements Serializable {
         this.postalCode = postalCode;
     }
 
-    public List<Article> getArticleList() {
-        return articleList;
+    public Collection<Article> getArticleCollection() {
+        return articleCollection;
     }
 
-    public void setArticleList(List<Article> articleList) {
-        this.articleList = articleList;
+    public void setArticleCollection(Collection<Article> articleCollection) {
+        this.articleCollection = articleCollection;
     }
 
-    public List<Command> getCommandList() {
-        return commandList;
+    public Collection<Command> getCommandCollection() {
+        return commandCollection;
     }
 
-    public void setCommandList(List<Command> commandList) {
-        this.commandList = commandList;
+    public void setCommandCollection(Collection<Command> commandCollection) {
+        this.commandCollection = commandCollection;
     }
 
     @Override
@@ -164,7 +163,7 @@ public class Provider implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Provider[ id=" + id + " ]";
+        return "modele.entity.Provider[ id=" + id + " ]";
     }
     
 }

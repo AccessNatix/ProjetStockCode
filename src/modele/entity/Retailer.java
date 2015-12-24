@@ -5,9 +5,8 @@
  */
 package modele.entity;
 
-import modele.entity.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -43,7 +42,7 @@ public class Retailer implements Serializable {
     @ManyToOne(optional = false)
     private Employee employeeId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "retailerId")
-    private List<RetailerCommands> retailerCommandsList;
+    private Collection<RetailerCommands> retailerCommandsCollection;
 
     public Retailer() {
     }
@@ -68,12 +67,12 @@ public class Retailer implements Serializable {
         this.employeeId = employeeId;
     }
 
-    public List<RetailerCommands> getRetailerCommandsList() {
-        return retailerCommandsList;
+    public Collection<RetailerCommands> getRetailerCommandsCollection() {
+        return retailerCommandsCollection;
     }
 
-    public void setRetailerCommandsList(List<RetailerCommands> retailerCommandsList) {
-        this.retailerCommandsList = retailerCommandsList;
+    public void setRetailerCommandsCollection(Collection<RetailerCommands> retailerCommandsCollection) {
+        this.retailerCommandsCollection = retailerCommandsCollection;
     }
 
     @Override
@@ -98,7 +97,7 @@ public class Retailer implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Retailer[ id=" + id + " ]";
+        return "modele.entity.Retailer[ id=" + id + " ]";
     }
     
 }

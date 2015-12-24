@@ -5,9 +5,8 @@
  */
 package modele.entity;
 
-import modele.entity.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,8 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -40,10 +37,11 @@ public class Transaction implements Serializable {
     @Column(name = "id")
     private Integer id;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transactionId")
-    private List<TransactionArticles> transactionArticlesList;
-    @JoinColumn(name = "payment_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Payment paymentId;
+    private Collection<SessionTransactions> sessionTransactionsCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transactionId")
+    private Collection<TransactionArticles> transactionArticlesCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transactionId")
+    private Collection<Payment> paymentCollection;
 
     public Transaction() {
     }
@@ -60,20 +58,28 @@ public class Transaction implements Serializable {
         this.id = id;
     }
 
-    public List<TransactionArticles> getTransactionArticlesList() {
-        return transactionArticlesList;
+    public Collection<SessionTransactions> getSessionTransactionsCollection() {
+        return sessionTransactionsCollection;
     }
 
-    public void setTransactionArticlesList(List<TransactionArticles> transactionArticlesList) {
-        this.transactionArticlesList = transactionArticlesList;
+    public void setSessionTransactionsCollection(Collection<SessionTransactions> sessionTransactionsCollection) {
+        this.sessionTransactionsCollection = sessionTransactionsCollection;
     }
 
-    public Payment getPaymentId() {
-        return paymentId;
+    public Collection<TransactionArticles> getTransactionArticlesCollection() {
+        return transactionArticlesCollection;
     }
 
-    public void setPaymentId(Payment paymentId) {
-        this.paymentId = paymentId;
+    public void setTransactionArticlesCollection(Collection<TransactionArticles> transactionArticlesCollection) {
+        this.transactionArticlesCollection = transactionArticlesCollection;
+    }
+
+    public Collection<Payment> getPaymentCollection() {
+        return paymentCollection;
+    }
+
+    public void setPaymentCollection(Collection<Payment> paymentCollection) {
+        this.paymentCollection = paymentCollection;
     }
 
     @Override
@@ -98,7 +104,7 @@ public class Transaction implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Transaction[ id=" + id + " ]";
+        return "modele.entity.Transaction[ id=" + id + " ]";
     }
     
 }

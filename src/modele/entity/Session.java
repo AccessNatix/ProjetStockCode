@@ -5,10 +5,10 @@
  */
 package modele.entity;
 
-import modele.entity.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,6 +29,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "Session.findAll", query = "SELECT s FROM Session s"),
     @NamedQuery(name = "Session.findById", query = "SELECT s FROM Session s WHERE s.id = :id"),
     @NamedQuery(name = "Session.findByPseudo", query = "SELECT s FROM Session s WHERE s.pseudo = :pseudo"),
+    @NamedQuery(name = "Session.findByConnexion", query = "SELECT s FROM Session s WHERE s.pseudo = :pseudo AND s.password = :password"),
     @NamedQuery(name = "Session.findByPassword", query = "SELECT s FROM Session s WHERE s.password = :password")})
 public class Session implements Serializable {
 
@@ -44,8 +45,8 @@ public class Session implements Serializable {
     @Basic(optional = false)
     @Column(name = "password")
     private String password;
-    @OneToMany(mappedBy = "sessionId")
-    private List<CashRegister> cashRegisterList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sessionId")
+    private Collection<SessionTransactions> sessionTransactionsCollection;
 
     public Session() {
     }
@@ -84,12 +85,12 @@ public class Session implements Serializable {
         this.password = password;
     }
 
-    public List<CashRegister> getCashRegisterList() {
-        return cashRegisterList;
+    public Collection<SessionTransactions> getSessionTransactionsCollection() {
+        return sessionTransactionsCollection;
     }
 
-    public void setCashRegisterList(List<CashRegister> cashRegisterList) {
-        this.cashRegisterList = cashRegisterList;
+    public void setSessionTransactionsCollection(Collection<SessionTransactions> sessionTransactionsCollection) {
+        this.sessionTransactionsCollection = sessionTransactionsCollection;
     }
 
     @Override
@@ -114,7 +115,7 @@ public class Session implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Session[ id=" + id + " ]";
+        return "modele.entity.Session[ id=" + id + " ]";
     }
     
 }

@@ -1,6 +1,6 @@
 package modele;
 
-import controleur.jpacontroleur.ArticleJpaController;
+import controller.jpacontroller.ArticleJpaController;
 import java.util.HashMap;
 import java.util.List;
 import modele.entity.AisleArticles;
@@ -22,29 +22,30 @@ public class SystemStock {
         this.aWarehouse = ManagerWarehouse.getManagerWarehouse();
     }
 
-	public void restock(Article article, int quantity) {
+	public boolean restock(Article article, int quantity) {
         WarehouseArticles warehouseArticle = aWarehouse.getArticleFromWarehouse(article);
         if(warehouseArticle.getQuantity()<quantity){
-            throw new UnsupportedOperationException();
+            return false;
         }
         removeArticleFromAisle(article, quantity);
         addArticleToAisle(article, quantity);
+        return true;
 	}
 
 	public void addArticleToWarehouse(Article article, int quantity) {
 		this.aWarehouse.addArticleToWarehouse(article, quantity);
 	}
     
-    public void removeArticleFromWarehouse(Article article, int quantity) {
-		this.aWarehouse.removeArticleFromWarehouse(article, quantity);
+    public boolean removeArticleFromWarehouse(Article article, int quantity) {
+		return this.aWarehouse.removeArticleFromWarehouse(article, quantity);
 	}
     
     public void addArticleToAisle(Article article, int quantity) {
 		this.aAisle.addArticleToAisle(article, quantity);
 	}
     
-    public void removeArticleFromAisle(Article article, int quantity) {
-		this.aAisle.removeArticleFromAisle(article, quantity);
+    public boolean removeArticleFromAisle(Article article, int quantity) {
+		return this.aAisle.removeArticleFromAisle(article, quantity);
     }
 
 	public HashMap<Article,Integer> checkStock() {
@@ -55,8 +56,10 @@ public class SystemStock {
             WarehouseArticles warehouseArticle = aWarehouse.getArticleFromWarehouse(article);
             AisleArticles aisleArticle = aAisle.getArticleFromAisle(article);
             
-            int warehouseStock = warehouseArticle.getQuantity();
-            int aisleStock = aisleArticle.getQuantity();
+            int warehouseStock = 0;
+            if(warehouseArticle != null) warehouseArticle.getQuantity();
+            int aisleStock = 0;
+            if(aisleArticle != null) aisleArticle.getQuantity();
             
             int totalStock = warehouseStock + aisleStock;
             

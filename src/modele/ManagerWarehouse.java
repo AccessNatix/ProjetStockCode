@@ -1,6 +1,6 @@
 package modele;
 
-import controleur.jpacontroleur.WarehouseArticlesJpaController;
+import controller.jpacontroller.WarehouseArticlesJpaController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modele.entity.AisleArticles;
@@ -58,19 +58,19 @@ public class ManagerWarehouse {
      * Retirer article du rayon
      * @param article 
      */
-    public void removeArticleFromWarehouse(Article article, int quantity)
+    public boolean removeArticleFromWarehouse(Article article, int quantity)
     {
         WarehouseArticles tmp = this.aWarehouseController.findByArticleId(article.getId());
          
         if(tmp == null)
         {
-            Logger.getLogger(ManagerAisle.class.getName()).log(Level.SEVERE, null, new UnsupportedOperationException());
+            return false;
         }
         else
         {
             try {
                 if(tmp.getQuantity()<quantity) {
-                    Logger.getLogger(ManagerWarehouse.class.getName()).log(Level.SEVERE, null, new UnsupportedOperationException());
+                    return false;
                 }
                 else if (tmp.getQuantity()==quantity){
                     this.aWarehouseController.destroy(tmp.getId());
@@ -79,11 +79,13 @@ public class ManagerWarehouse {
                     tmp.setQuantity(tmp.getQuantity()-quantity);
                     this.aWarehouseController.edit(tmp);
                 }
+                return true;
                 
             } catch (Exception ex) {
                 Logger.getLogger(ManagerWarehouse.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        return false;
     }
     
     public WarehouseArticles getArticleFromWarehouse(Article article)

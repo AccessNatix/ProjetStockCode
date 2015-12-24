@@ -1,6 +1,6 @@
 package modele;
 
-import controleur.jpacontroleur.AisleArticlesJpaController;
+import controller.jpacontroller.AisleArticlesJpaController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modele.entity.AisleArticles;
@@ -58,19 +58,19 @@ public class ManagerAisle {
      * @param article 
      * @param quantity 
      */
-    public void removeArticleFromAisle(Article article, int quantity)
+    public boolean removeArticleFromAisle(Article article, int quantity)
     {
         AisleArticles tmp = this.aAisleController.findByArticleId(article.getId());
          
         if(tmp == null)
         {
-            Logger.getLogger(ManagerAisle.class.getName()).log(Level.SEVERE, null, new UnsupportedOperationException());
+            return false;
         }
         else
         {
             try {
                 if(tmp.getQuantity()<quantity) {
-                    Logger.getLogger(ManagerAisle.class.getName()).log(Level.SEVERE, null, new UnsupportedOperationException());
+                    return false;
                 }
                 else if (tmp.getQuantity()==quantity){
                     this.aAisleController.destroy(tmp.getId());
@@ -79,11 +79,12 @@ public class ManagerAisle {
                     tmp.setQuantity(tmp.getQuantity()-quantity);
                     this.aAisleController.edit(tmp);
                 }
-                
+                return true;
             } catch (Exception ex) {
                 Logger.getLogger(ManagerAisle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        return false;
     }
     
     public AisleArticles getArticleFromAisle(Article article)

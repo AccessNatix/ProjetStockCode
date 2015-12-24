@@ -5,20 +5,18 @@
  */
 package modele.entity;
 
-import modele.entity.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -47,8 +45,9 @@ public class Payment implements Serializable {
     @Basic(optional = false)
     @Column(name = "value")
     private BigDecimal value;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentId")
-    private List<Transaction> transactionList;
+    @JoinColumn(name = "transaction_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Transaction transactionId;
 
     public Payment() {
     }
@@ -87,12 +86,12 @@ public class Payment implements Serializable {
         this.value = value;
     }
 
-    public List<Transaction> getTransactionList() {
-        return transactionList;
+    public Transaction getTransactionId() {
+        return transactionId;
     }
 
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
+    public void setTransactionId(Transaction transactionId) {
+        this.transactionId = transactionId;
     }
 
     @Override
@@ -117,7 +116,7 @@ public class Payment implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Payment[ id=" + id + " ]";
+        return "modele.entity.Payment[ id=" + id + " ]";
     }
     
 }

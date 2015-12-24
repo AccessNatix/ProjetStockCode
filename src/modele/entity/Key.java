@@ -5,9 +5,7 @@
  */
 package modele.entity;
 
-import modele.entity.*;
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -29,6 +26,7 @@ import javax.persistence.Table;
 @Table(name = "key")
 @NamedQueries({
     @NamedQuery(name = "Key.findAll", query = "SELECT k FROM Key k"),
+    @NamedQuery(name = "Key.findByCashRegisterId", query = "SELECT k FROM Key k WHERE k.cashRegisterid.id = :cashRegisterId"),
     @NamedQuery(name = "Key.findById", query = "SELECT k FROM Key k WHERE k.id = :id")})
 public class Key implements Serializable {
 
@@ -38,8 +36,6 @@ public class Key implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @OneToMany(mappedBy = "keyId")
-    private List<CashRegister> cashRegisterList;
     @JoinColumn(name = "cashRegister_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private CashRegister cashRegisterid;
@@ -57,14 +53,6 @@ public class Key implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public List<CashRegister> getCashRegisterList() {
-        return cashRegisterList;
-    }
-
-    public void setCashRegisterList(List<CashRegister> cashRegisterList) {
-        this.cashRegisterList = cashRegisterList;
     }
 
     public CashRegister getCashRegisterid() {
@@ -97,7 +85,7 @@ public class Key implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Key[ id=" + id + " ]";
+        return "modele.entity.Key[ id=" + id + " ]";
     }
     
 }

@@ -5,7 +5,6 @@
  */
 package modele.entity;
 
-import modele.entity.*;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -28,6 +27,8 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "CommandedArticles.findAll", query = "SELECT c FROM CommandedArticles c"),
     @NamedQuery(name = "CommandedArticles.findById", query = "SELECT c FROM CommandedArticles c WHERE c.id = :id"),
+    @NamedQuery(name = "CommandedArticles.findByCommandId", query = "SELECT c FROM CommandedArticles c WHERE c.commandId.id = :commandId"),
+    @NamedQuery(name = "CommandedArticles.findByIds", query = "SELECT c FROM CommandedArticles c WHERE c.articleId.id = :articleId AND c.commandId.id = :commandId"),
     @NamedQuery(name = "CommandedArticles.findByQuantity", query = "SELECT c FROM CommandedArticles c WHERE c.quantity = :quantity")})
 public class CommandedArticles implements Serializable {
 
@@ -113,7 +114,7 @@ public class CommandedArticles implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.CommandedArticles[ id=" + id + " ]";
+        return "modele.entity.CommandedArticles[ id=" + id + " ]";
     }
     
 }

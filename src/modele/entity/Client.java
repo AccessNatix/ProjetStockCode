@@ -5,9 +5,10 @@
  */
 package modele.entity;
 
-import modele.entity.*;
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -42,6 +44,8 @@ public class Client implements Serializable {
     @Basic(optional = false)
     @Column(name = "lastname")
     private String lastname;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientId")
+    private Collection<ClientArticles> clientArticlesCollection;
 
     public Client() {
     }
@@ -80,6 +84,14 @@ public class Client implements Serializable {
         this.lastname = lastname;
     }
 
+    public Collection<ClientArticles> getClientArticlesCollection() {
+        return clientArticlesCollection;
+    }
+
+    public void setClientArticlesCollection(Collection<ClientArticles> clientArticlesCollection) {
+        this.clientArticlesCollection = clientArticlesCollection;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -102,7 +114,7 @@ public class Client implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Client[ id=" + id + " ]";
+        return "modele.entity.Client[ id=" + id + " ]";
     }
     
 }

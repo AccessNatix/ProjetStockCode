@@ -5,9 +5,8 @@
  */
 package modele.entity;
 
-import modele.entity.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -40,12 +39,12 @@ public class Command implements Serializable {
     @Column(name = "id")
     private Integer id;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "commandId")
-    private List<CommandedArticles> commandedArticlesList;
+    private Collection<CommandedArticles> commandedArticlesCollection;
     @JoinColumn(name = "provider_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Provider providerId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "commandId")
-    private List<RetailerCommands> retailerCommandsList;
+    private Collection<RetailerCommands> retailerCommandsCollection;
 
     public Command() {
     }
@@ -62,12 +61,12 @@ public class Command implements Serializable {
         this.id = id;
     }
 
-    public List<CommandedArticles> getCommandedArticlesList() {
-        return commandedArticlesList;
+    public Collection<CommandedArticles> getCommandedArticlesCollection() {
+        return commandedArticlesCollection;
     }
 
-    public void setCommandedArticlesList(List<CommandedArticles> commandedArticlesList) {
-        this.commandedArticlesList = commandedArticlesList;
+    public void setCommandedArticlesCollection(Collection<CommandedArticles> commandedArticlesCollection) {
+        this.commandedArticlesCollection = commandedArticlesCollection;
     }
 
     public Provider getProviderId() {
@@ -78,12 +77,12 @@ public class Command implements Serializable {
         this.providerId = providerId;
     }
 
-    public List<RetailerCommands> getRetailerCommandsList() {
-        return retailerCommandsList;
+    public Collection<RetailerCommands> getRetailerCommandsCollection() {
+        return retailerCommandsCollection;
     }
 
-    public void setRetailerCommandsList(List<RetailerCommands> retailerCommandsList) {
-        this.retailerCommandsList = retailerCommandsList;
+    public void setRetailerCommandsCollection(Collection<RetailerCommands> retailerCommandsCollection) {
+        this.retailerCommandsCollection = retailerCommandsCollection;
     }
 
     @Override
@@ -108,7 +107,7 @@ public class Command implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Command[ id=" + id + " ]";
+        return "modele.entity.Command[ id=" + id + " ]";
     }
     
 }

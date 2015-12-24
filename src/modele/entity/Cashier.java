@@ -5,7 +5,6 @@
  */
 package modele.entity;
 
-import modele.entity.*;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -85,7 +84,7 @@ public class Cashier implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Cashier[ id=" + id + " ]";
+        return "modele.entity.Cashier[ id=" + id + " ]";
     }
     
 }

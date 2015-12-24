@@ -5,9 +5,8 @@
  */
 package modele.entity;
 
-import modele.entity.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,8 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -39,14 +36,8 @@ public class CashRegister implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @JoinColumn(name = "session_id", referencedColumnName = "id")
-    @ManyToOne
-    private Session sessionId;
-    @JoinColumn(name = "key_id", referencedColumnName = "id")
-    @ManyToOne
-    private Key keyId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cashRegisterid")
-    private List<Key> keyList;
+    private Collection<Key> keyCollection;
 
     public CashRegister() {
     }
@@ -63,28 +54,12 @@ public class CashRegister implements Serializable {
         this.id = id;
     }
 
-    public Session getSessionId() {
-        return sessionId;
+    public Collection<Key> getKeyCollection() {
+        return keyCollection;
     }
 
-    public void setSessionId(Session sessionId) {
-        this.sessionId = sessionId;
-    }
-
-    public Key getKeyId() {
-        return keyId;
-    }
-
-    public void setKeyId(Key keyId) {
-        this.keyId = keyId;
-    }
-
-    public List<Key> getKeyList() {
-        return keyList;
-    }
-
-    public void setKeyList(List<Key> keyList) {
-        this.keyList = keyList;
+    public void setKeyCollection(Collection<Key> keyCollection) {
+        this.keyCollection = keyCollection;
     }
 
     @Override
@@ -109,7 +84,7 @@ public class CashRegister implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.CashRegister[ id=" + id + " ]";
+        return "modele.entity.CashRegister[ id=" + id + " ]";
     }
     
 }

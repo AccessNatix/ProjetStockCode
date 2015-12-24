@@ -5,9 +5,8 @@
  */
 package modele.entity;
 
-import modele.entity.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -46,9 +45,9 @@ public class Employee implements Serializable {
     @Column(name = "lastname")
     private String lastname;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
-    private List<Retailer> retailerList;
+    private Collection<Retailer> retailerCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
-    private List<Cashier> cashierList;
+    private Collection<Cashier> cashierCollection;
 
     public Employee() {
     }
@@ -87,20 +86,20 @@ public class Employee implements Serializable {
         this.lastname = lastname;
     }
 
-    public List<Retailer> getRetailerList() {
-        return retailerList;
+    public Collection<Retailer> getRetailerCollection() {
+        return retailerCollection;
     }
 
-    public void setRetailerList(List<Retailer> retailerList) {
-        this.retailerList = retailerList;
+    public void setRetailerCollection(Collection<Retailer> retailerCollection) {
+        this.retailerCollection = retailerCollection;
     }
 
-    public List<Cashier> getCashierList() {
-        return cashierList;
+    public Collection<Cashier> getCashierCollection() {
+        return cashierCollection;
     }
 
-    public void setCashierList(List<Cashier> cashierList) {
-        this.cashierList = cashierList;
+    public void setCashierCollection(Collection<Cashier> cashierCollection) {
+        this.cashierCollection = cashierCollection;
     }
 
     @Override
@@ -125,7 +124,7 @@ public class Employee implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Employee[ id=" + id + " ]";
+        return "modele.entity.Employee[ id=" + id + " ]";
     }
     
 }
