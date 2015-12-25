@@ -6,6 +6,7 @@
 package modele.entity.handler;
 
 import java.util.List;
+import java.util.Observable;
 import modele.entity.Cashier;
 import modele.entity.ClientArticles;
 import modele.entity.Key;
@@ -13,14 +14,14 @@ import modele.entity.TransactionArticles;
 
 /**
  *
- * @author yo
+ * 
  */
-public class CashierHandler {
+public class CashierHelper extends Observable{
     private Cashier aCashier;
     private CashRegisterHelper aCashRegisterHelper;
     private TransactionHelper aTransactionHelper = null;
     
-    public CashierHandler(Cashier pCachier, CashRegisterHelper pCashRegisterHelper){
+    public CashierHelper(Cashier pCachier, CashRegisterHelper pCashRegisterHelper){
         this.aCashier = pCachier;
         this.aCashRegisterHelper = pCashRegisterHelper;
         this.aTransactionHelper = new TransactionHelper(aCashRegisterHelper.getSessionHelper());
@@ -32,6 +33,7 @@ public class CashierHandler {
     
     public boolean addArticles(ClientHelper clientHelper){
         List<ClientArticles> list = clientHelper.getArticles();
+        
         for(ClientArticles articles : list){
             if(aTransactionHelper.addArticle(articles.getArticleId(), articles.getQuantity()) == false) return false;
         }
@@ -40,11 +42,25 @@ public class CashierHandler {
     }
     
     public boolean connect(String pseudo, String password){
-        return this.aCashRegisterHelper.connect(pseudo, password);
+        if(this.aCashRegisterHelper.connect(pseudo, password))
+        {
+            return true;
+        }
+        else
+        {
+            this.setChanged();
+            this.notifyObservers("Accès refusé");
+            return false;
+        }
     }
     
     public boolean pay(String type){
         return aTransactionHelper.payTransaction(type);
+    }
+    
+    public boolean refund()
+    {
+        return aTransactionHelper.refundTransaction();
     }
     
     public boolean open(Key key){

@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package main;
+package modele.entity.factory;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -11,76 +6,16 @@ import modele.entity.Article;
 import modele.entity.CashRegister;
 import modele.entity.Cashier;
 import modele.entity.Client;
-import static modele.entity.Client_.firstname;
-import static modele.entity.Client_.lastname;
-import modele.entity.Command;
 import modele.entity.Key;
 import modele.entity.Provider;
 import modele.entity.Retailer;
 import modele.entity.Session;
-import modele.entity.factory.EntityFactory;
-import modele.entity.handler.CashRegisterHelper;
-import modele.entity.handler.CashierHandler;
-import modele.entity.handler.ClientHelper;
-import modele.entity.handler.RetailerHelper;
 
 /**
  *
- * @author yo
+ * @author anatole
  */
-public class Main {
-    
-    public static void main(String[] argv){
-        /*Client client = new Client();
-        client.setFirstname("fistname");
-        client.setLastname("lastname");
-        ClientJpaController.getController().create(client);*/
-        
-        Provider provider = createProvider("adress", "name", "phone", "postalCode");
-        
-        Article p1 = createArticle(provider, "barcode", "type", "name", new BigDecimal(15.90), 5, 3),
-            p2 = createArticle(provider, "barcode", "type", "name2", new BigDecimal(15.90), 5, 3);
-        
-        Client c1 = createClient("firstname", "lastname");
-        
-        Retailer r1 = createRetailer("firstname", "lastname");
-        
-        ClientHelper clientHelper = new ClientHelper(c1);
-        
-        RetailerHelper retailerHelper = new RetailerHelper(r1);
-        
-        Cashier cashier = createCashier("firstname", "lastname");
-        
-        CashRegister cashRegister = createCashRegister();
-        
-        CashRegisterHelper cashRegisterHelper = new CashRegisterHelper(cashRegister);
-        
-        CashierHandler cashierHandler = new CashierHandler(cashier, cashRegisterHelper);
-        
-        // create session to log in
-        createSession("pseudo", "password");
-        
-        cashierHandler.connect("pseudo", "password");
-        
-        Key key = createKey(cashRegister);
-        
-        cashierHandler.open(key);
-        
-        clientHelper.addArticle(p1, 2);
-        clientHelper.addArticle(p2, 3);
-        
-        cashierHandler.startTransaction("buy");
-        cashierHandler.addArticles(clientHelper);
-        //cashierHandler.cancelTranslation();
-        cashierHandler.pay("check");
-        
-        Command command = retailerHelper.orderArticle(retailerHelper.printInsufficientArticle(),provider);
-        
-        retailerHelper.handleCommand(command);
-        
-        
-    }
-    
+public class ObjectFactory {
     public static Article createArticle(Provider provider, String barcode, String type, String name, BigDecimal price, int stock, int threshold){
         HashMap<String, Object> map = new HashMap<>();
         map.put("provider",provider);

@@ -5,11 +5,17 @@
  */
 package vue;
 
+import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+
 /**
  *
  * @author anatole
  */
-public class CashierLoginView extends javax.swing.JFrame {
+public class CashierLoginView extends javax.swing.JFrame implements Observer{
 
     /**
      * Creates new form CashierView
@@ -36,6 +42,8 @@ public class CashierLoginView extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        message = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -54,8 +62,10 @@ public class CashierLoginView extends javax.swing.JFrame {
         jTextField2.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         jTextField2.setText("jTextField2");
 
+        jLabel4.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         jLabel4.setText("Présence clef:");
 
+        jLabel5.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         jLabel5.setText("Clef insérée");
 
         jButton1.setText("Identification");
@@ -65,15 +75,19 @@ public class CashierLoginView extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        jLabel6.setText("Message:");
+        jLabel6.setToolTipText("");
+
+        message.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        message.setText("ok");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(148, 148, 148)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(61, 61, 61)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -87,14 +101,22 @@ public class CashierLoginView extends javax.swing.JFrame {
                                 .addComponent(jLabel2)
                                 .addGap(18, 18, 18)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(118, 118, 118)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel3))
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel4))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5))))))
+                                    .addComponent(jLabel5)
+                                    .addComponent(message))))))
                 .addGap(47, 47, 47))
         );
         layout.setVerticalGroup(
@@ -108,15 +130,19 @@ public class CashierLoginView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(message))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
@@ -171,8 +197,38 @@ public class CashierLoginView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel message;
     // End of variables declaration//GEN-END:variables
+
+    public JButton getButtonIdentification()
+    {
+        return this.jButton1;
+    }
+    
+    public JTextField getLogin()
+    {
+        return this.jTextField1;
+    }
+    
+    public JTextField getPassword()
+    {
+        return this.jTextField2;
+    }
+
+    @Override
+    public void update(Observable o, Object o1) {
+        if(o1 instanceof String)
+        {
+            this.message.setText((String)o1);
+        }
+    }
+    
+    public void addController(ActionListener action)
+    {
+        this.jButton1.addActionListener(action);
+    }
 }

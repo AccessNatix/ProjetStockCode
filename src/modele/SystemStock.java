@@ -1,5 +1,6 @@
 package modele;
 
+import controller.jpacontroller.AisleArticlesJpaController;
 import controller.jpacontroller.ArticleJpaController;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +28,7 @@ public class SystemStock {
         if(warehouseArticle.getQuantity()<quantity){
             return false;
         }
-        removeArticleFromAisle(article, quantity);
+        removeArticleFromWarehouse(article, quantity);
         addArticleToAisle(article, quantity);
         return true;
 	}
@@ -67,6 +68,29 @@ public class SystemStock {
                 map.put(article, totalStock);
             }
         }
+        return map;
+    }
+    
+    /**
+     * Cette méthode est utilisé pour récupérer les articles en stock
+     * @return 
+     */
+    public HashMap<Article, Integer> getStockInAisle()
+    {
+        HashMap<Article,Integer> map = new HashMap<>();
+        List<Article> listArticle = ArticleJpaController.getController().findArticleEntities();
+        
+        for(Article article : listArticle){
+            AisleArticles aisleArticle = aAisle.getArticleFromAisle(article);
+
+            int aisleStock = 0;
+            if(aisleArticle != null) aisleArticle.getQuantity();
+            
+            int totalStock = aisleStock;
+            
+            map.put(article, totalStock);
+        }
+        
         return map;
     }
 

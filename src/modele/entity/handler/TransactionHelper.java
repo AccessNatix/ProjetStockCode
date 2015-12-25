@@ -121,6 +121,11 @@ public class TransactionHelper {
         return payment != null;
     }
     
+    public boolean refundTransaction()
+    {
+        return true;
+    }
+    
     public List<TransactionArticles> getArticles(){
         return TransactionArticlesJpaController.getController().findByTransactionId(aTransaction.getId());
     }
