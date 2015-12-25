@@ -6,8 +6,8 @@
 package modele.entity.handler;
 
 import java.util.List;
-import modele.entity.Article;
 import modele.entity.Cashier;
+import modele.entity.ClientArticles;
 import modele.entity.Key;
 import modele.entity.TransactionArticles;
 
@@ -30,8 +30,13 @@ public class CashierHandler {
         return aTransactionHelper.startTransaction(type);
     }
     
-    public boolean addArticle(Article article, int quantity){
-        return aTransactionHelper.addArticle(article, quantity);
+    public boolean addArticles(ClientHelper clientHelper){
+        List<ClientArticles> list = clientHelper.getArticles();
+        for(ClientArticles articles : list){
+            if(aTransactionHelper.addArticle(articles.getArticleId(), articles.getQuantity()) == false) return false;
+        }
+        return true;
+        //return aTransactionHelper.addArticle(article, quantity);
     }
     
     public boolean connect(String pseudo, String password){

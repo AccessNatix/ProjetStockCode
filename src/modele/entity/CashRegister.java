@@ -30,6 +30,10 @@ import javax.persistence.Table;
     @NamedQuery(name = "CashRegister.findById", query = "SELECT c FROM CashRegister c WHERE c.id = :id")})
 public class CashRegister implements Serializable {
 
+    @Basic(optional = false)
+    @Column(name = "truc")
+    private int truc;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,6 +89,14 @@ public class CashRegister implements Serializable {
     @Override
     public String toString() {
         return "modele.entity.CashRegister[ id=" + id + " ]";
+    }
+
+    public int getTruc() {
+        return truc;
+    }
+
+    public void setTruc(int truc) {
+        this.truc = truc;
     }
     
 }

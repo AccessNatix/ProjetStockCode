@@ -26,7 +26,7 @@ import javax.persistence.Table;
 @Table(name = "sessionTransactions")
 @NamedQueries({
     @NamedQuery(name = "SessionTransactions.findAll", query = "SELECT s FROM SessionTransactions s"),
-    @NamedQuery(name = "SessionTransactions.findSessionId", query = "SELECT s FROM SessionTransactions s WHERE s.sessionId.id = sessionId"),
+    @NamedQuery(name = "SessionTransactions.findSessionId", query = "SELECT s FROM SessionTransactions s WHERE s.sessionId.id = :sessionId"),
     @NamedQuery(name = "SessionTransactions.findById", query = "SELECT s FROM SessionTransactions s WHERE s.id = :id")})
 public class SessionTransactions implements Serializable {
 

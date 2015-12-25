@@ -5,47 +5,24 @@
  */
 package main;
 
-import controller.jpacontroller.AisleArticlesJpaController;
-import controller.jpacontroller.ArticleJpaController;
-import controller.jpacontroller.CashRegisterJpaController;
-import controller.jpacontroller.CashierJpaController;
-import controller.jpacontroller.ClientArticlesJpaController;
-import controller.jpacontroller.ClientJpaController;
-import controller.jpacontroller.CommandJpaController;
-import controller.jpacontroller.CommandedArticlesJpaController;
-import controller.jpacontroller.EmployeeJpaController;
-import controller.jpacontroller.KeyJpaController;
-import controller.jpacontroller.PaymentJpaController;
-import controller.jpacontroller.ProviderJpaController;
-import controller.jpacontroller.RetailerCommandsJpaController;
-import controller.jpacontroller.RetailerJpaController;
-import controller.jpacontroller.SessionJpaController;
-import controller.jpacontroller.SessionTransactionsJpaController;
-import controller.jpacontroller.TransactionArticlesJpaController;
-import controller.jpacontroller.TransactionJpaController;
-import controller.jpacontroller.WarehouseArticlesJpaController;
 import java.math.BigDecimal;
-import java.util.List;
-import modele.SystemStock;
-import modele.entity.AisleArticles;
+import java.util.HashMap;
 import modele.entity.Article;
 import modele.entity.CashRegister;
 import modele.entity.Cashier;
 import modele.entity.Client;
-import modele.entity.ClientArticles;
+import static modele.entity.Client_.firstname;
+import static modele.entity.Client_.lastname;
 import modele.entity.Command;
-import modele.entity.CommandedArticles;
-import modele.entity.Employee;
 import modele.entity.Key;
-import modele.entity.Payment;
 import modele.entity.Provider;
 import modele.entity.Retailer;
-import modele.entity.RetailerCommands;
 import modele.entity.Session;
-import modele.entity.SessionTransactions;
-import modele.entity.Transaction;
-import modele.entity.TransactionArticles;
-import modele.entity.WarehouseArticles;
+import modele.entity.factory.EntityFactory;
+import modele.entity.handler.CashRegisterHelper;
+import modele.entity.handler.CashierHandler;
+import modele.entity.handler.ClientHelper;
+import modele.entity.handler.RetailerHelper;
 
 /**
  *
@@ -58,25 +35,109 @@ public class Main {
         client.setFirstname("fistname");
         client.setLastname("lastname");
         ClientJpaController.getController().create(client);*/
-        Provider p1 = createProvider("1");
         
-        Client client = createClient();
+        Provider provider = createProvider("adress", "name", "phone", "postalCode");
         
-        Article a1 = createArticle("1", p1);
-        Article a2 = createArticle("2", p1);
+        Article p1 = createArticle(provider, "barcode", "type", "name", new BigDecimal(15.90), 5, 3),
+            p2 = createArticle(provider, "barcode", "type", "name2", new BigDecimal(15.90), 5, 3);
         
-        ClientArticles ca1 = createClientArticles(client, a1, 2);
-        ClientArticles ca2 = createClientArticles(client, a2, 1);
+        Client c1 = createClient("firstname", "lastname");
         
-        List<ClientArticles> clientArticles = ClientArticlesJpaController.getController().findByClientId(client.getId());
+        Retailer r1 = createRetailer("firstname", "lastname");
         
-        Cashier cashier = createCashier();
+        ClientHelper clientHelper = new ClientHelper(c1);
+        
+        RetailerHelper retailerHelper = new RetailerHelper(r1);
+        
+        Cashier cashier = createCashier("firstname", "lastname");
         
         CashRegister cashRegister = createCashRegister();
         
+        CashRegisterHelper cashRegisterHelper = new CashRegisterHelper(cashRegister);
+        
+        CashierHandler cashierHandler = new CashierHandler(cashier, cashRegisterHelper);
+        
+        // create session to log in
+        createSession("pseudo", "password");
+        
+        cashierHandler.connect("pseudo", "password");
+        
         Key key = createKey(cashRegister);
         
+        cashierHandler.open(key);
         
+        clientHelper.addArticle(p1, 2);
+        clientHelper.addArticle(p2, 3);
+        
+        cashierHandler.startTransaction("buy");
+        cashierHandler.addArticles(clientHelper);
+        //cashierHandler.cancelTranslation();
+        cashierHandler.pay("check");
+        
+        Command command = retailerHelper.orderArticle(retailerHelper.printInsufficientArticle(),provider);
+        
+        retailerHelper.handleCommand(command);
+        
+        
+    }
+    
+    public static Article createArticle(Provider provider, String barcode, String type, String name, BigDecimal price, int stock, int threshold){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("provider",provider);
+        map.put("barcode",barcode);
+        map.put("type",type);
+        map.put("name",name);
+        map.put("price",price);
+        map.put("stock",stock);
+        map.put("threshold",threshold);
+        return EntityFactory.create(new Article(), map);
+    }
+    
+    public static Client createClient(String firstname, String lastname){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("firstname",firstname);
+        map.put("lastname",lastname);
+        return EntityFactory.create(new Client(), map);
+    }
+    
+    public static Retailer createRetailer(String firstname, String lastname){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("firstname",firstname);
+        map.put("lastname",lastname);
+        return EntityFactory.create(new Retailer(), map);
+    }
+    
+    public static Provider createProvider(String adress, String name, String phone, String postalCode){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("adress",adress);
+        map.put("name",name);
+        map.put("phone",phone);
+        map.put("postalCode",postalCode);
+        return EntityFactory.create(new Provider(), map);
+    }
+    
+    public static Cashier createCashier(String firstname, String lastname){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("firstname",firstname);
+        map.put("lastname",lastname);
+        return EntityFactory.create(new Cashier(), map);
+    }
+    
+    public static CashRegister createCashRegister(){
+        return EntityFactory.create(new CashRegister(), null);
+    }
+    
+    public static Session createSession(String pseudo, String password){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pseudo",pseudo);
+        map.put("password",password);
+        return EntityFactory.create(new Session(), map);
+    }
+    
+    public static Key createKey(CashRegister cashRegister){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("cashRegister",cashRegister);
+        return EntityFactory.create(new Key(), map);
     }
     
 }

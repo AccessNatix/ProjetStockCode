@@ -97,6 +97,7 @@ public class EntityFactory {
         }
         else if(t.getClass() == CashRegister.class){
             CashRegister cashRegister = new CashRegister();
+            cashRegister.setTruc(0);
 
             CashRegisterJpaController.getController().create(cashRegister);
             
@@ -265,7 +266,7 @@ public class EntityFactory {
             String type = (String) attributes.get("type");
             
             Transaction transaction = new Transaction();
-            transaction.set(type);
+            transaction.setType(type);
 
             TransactionJpaController.getController().create(transaction);
             
@@ -294,9 +295,14 @@ public class EntityFactory {
             warehouseArticle.setArticleId(article);
             warehouseArticle.setQuantity(quantity);
 
-            WarehouseArticlesJpaController.getController().create(warehouseArticle);
+            try {
+                WarehouseArticlesJpaController.getController().create(warehouseArticle);
+                t = (T) warehouseArticle;
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(EntityFactory.class.getName()).log(Level.SEVERE, null, ex);
+                t = null;
+            }
             
-            t = (T) warehouseArticle;
         }
         else{
             t = null;

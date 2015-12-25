@@ -5,7 +5,6 @@
  */
 package modele.entity.handler;
 
-import controller.jpacontroller.ArticleJpaController;
 import controller.jpacontroller.CommandedArticlesJpaController;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +12,7 @@ import modele.SystemStock;
 import modele.entity.Article;
 import modele.entity.Command;
 import modele.entity.CommandedArticles;
+import modele.entity.Provider;
 import modele.entity.Retailer;
 import modele.entity.factory.EntityFactory;
 
@@ -28,18 +28,19 @@ public class RetailerHelper {
         this.aRetailer = retailer;
     }
     
-    public boolean orderArticle(HashMap<Article,Integer> map){
-        Command command = EntityFactory.create(new Command(), null);
-        if(command == null) return false;
+    public Command orderArticle(HashMap<Article,Integer> map, Provider provider){
+        HashMap<String, Object> map2 = new HashMap<>();
+        map2.put("provider", provider);
+        Command command = EntityFactory.create(new Command(), map2);
+        if(command == null) return null;
         HashMap<String,Object> attibutes = new HashMap<>();
         attibutes.put("command", command);
         for(Article article : map.keySet()){
             attibutes.put("article", article);
             attibutes.put("quantity", map.get(article));
             CommandedArticles commandedArticles = EntityFactory.create(new CommandedArticles(), attibutes);
-            if(commandedArticles == null) return false;
         }
-        return true;
+        return command;
     }
     
     public boolean handleCommand(Command command){

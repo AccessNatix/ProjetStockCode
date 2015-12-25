@@ -7,6 +7,7 @@ package modele.entity.handler;
 
 import controller.jpacontroller.ClientArticlesJpaController;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modele.SystemStock;
@@ -51,5 +52,9 @@ public class ClientHelper {
             }
         }
         return true;
+    }
+    
+    public List<ClientArticles> getArticles(){
+        return ClientArticlesJpaController.getController().findByClientId(aClient.getId());
     }
 }

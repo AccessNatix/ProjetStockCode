@@ -30,7 +30,6 @@ import javax.persistence.Table;
     @NamedQuery(name = "Provider.findById", query = "SELECT p FROM Provider p WHERE p.id = :id"),
     @NamedQuery(name = "Provider.findByName", query = "SELECT p FROM Provider p WHERE p.name = :name"),
     @NamedQuery(name = "Provider.findByPhone", query = "SELECT p FROM Provider p WHERE p.phone = :phone"),
-    @NamedQuery(name = "Provider.findByBarcode", query = "SELECT p FROM Provider p WHERE p.barcode = :barcode"),
     @NamedQuery(name = "Provider.findByAdress", query = "SELECT p FROM Provider p WHERE p.adress = :adress"),
     @NamedQuery(name = "Provider.findByPostalCode", query = "SELECT p FROM Provider p WHERE p.postalCode = :postalCode")})
 public class Provider implements Serializable {

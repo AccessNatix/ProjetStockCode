@@ -23,7 +23,7 @@ import javax.persistence.Table;
  * @author yo
  */
 @Entity
-@Table(name = "key")
+@Table(name = "keyy")
 @NamedQueries({
     @NamedQuery(name = "Key.findAll", query = "SELECT k FROM Key k"),
     @NamedQuery(name = "Key.findByCashRegisterId", query = "SELECT k FROM Key k WHERE k.cashRegisterid.id = :cashRegisterId"),
