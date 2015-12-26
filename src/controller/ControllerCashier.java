@@ -2,6 +2,9 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import modele.entity.handler.CashierHelper;
 import modele.entity.handler.ClientHelper;
 import vue.CashierLoginView;
@@ -12,7 +15,7 @@ import vue.CashierView;
  * 
  * @author anatole
  */
-public class ControllerCashier implements ActionListener{
+public class ControllerCashier implements ActionListener, ChangeListener{
     
     // Modèle
     private final CashierHelper aCashierHandler;
@@ -52,18 +55,35 @@ public class ControllerCashier implements ActionListener{
         }
     }
     
-    public void initTransaction()
+    public void initTransactionPaye()
     {
-        this.aCashierHandler.startTransaction("type");
-
+        this.aCashierHandler.startTransaction("paye");
+    }
+    
+    public void initTransactionRefund()
+    {
+        this.aCashierHandler.startTransaction("refund");
     }
     
     /**
-     * Scan all object
+     * Scan for paying
      */
-    public void scan()
+    public void scanPaye()
     {
         this.aCashierHandler.addArticles(this.aClientHelper);
+    }
+    
+    /**
+     * Scan for refunding
+     */
+    public void scanRefund()
+    {
+        this.aCashierHandler.addArticles(this.aClientHelper);
+    }    
+
+    public void cancelTransaction()
+    {
+        this.aCashierHandler.cancelTranslation();
     }
     
     public void paye()
@@ -71,7 +91,7 @@ public class ControllerCashier implements ActionListener{
         this.aCashierHandler.pay("cb");
     }
     
-    public void rembourser()
+    public void refund()
     {
         //TODO
     }
@@ -92,29 +112,59 @@ public class ControllerCashier implements ActionListener{
             // tentative de connection
             System.err.println("tentative de connection");
             this.login(login, password);
-            this.initTransaction();
+            this.initTransactionPaye();
         }
-        else if(this.aCashierView.getScanButton() == ae.getSource())
+        else if(this.aCashierView.getScanPayeButton()== ae.getSource())
         {
-            System.err.println("Scan !");
-            this.scan();
+            System.err.println("Scan paye !");
+            this.scanPaye();
         }
+        else if(this.aCashierView.getScanRefundButton()== ae.getSource())
+        {
+            System.err.println("Scan refund !");
+            this.scanRefund();
+        }        
         else if(this.aCashierView.getDisconnect() == ae.getSource())
         {
+            System.err.println("Disconnect");
             this.aCashierLoginView.setVisible(true);
             this.aCashierView.setVisible(false);
         }
         else if(this.aCashierView.getPayeButton() == ae.getSource())
         {
+            System.err.println("Payer !");
             this.paye();
+            this.aCashierView.cleanInterface();
         }
-        else if(this.aCashierView.getRembourseButton() == ae.getSource())
+        else if(this.aCashierView.getRefundButton() == ae.getSource())
         {
-            this.rembourser();
+            System.err.println("Rembourser");
+            this.refund();
+            this.aCashierView.cleanInterface();
         }
         else
         {
             
         }
     }
+    
+    @Override
+    public void stateChanged(ChangeEvent changeEvent) {
+        JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+        int index = sourceTabbedPane.getSelectedIndex();
+        switch(sourceTabbedPane.getTitleAt(index))
+        {
+            case "Achat":
+                System.err.println("Achat");
+                this.cancelTransaction();
+                this.initTransactionPaye();
+                break;
+            case "Rembourser":
+                System.err.println("Rembourser");
+                this.cancelTransaction();
+                this.initTransactionRefund();
+                break;
+        }
+    }
+    
 }

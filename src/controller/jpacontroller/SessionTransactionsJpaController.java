@@ -204,9 +204,19 @@ public class SessionTransactionsJpaController implements Serializable {
     
     public List<SessionTransactions> findBySessionId(int sessionId){
         return getEntityManager()
-            .createNamedQuery("SessionTransactions.findSessionId")
+            .createNamedQuery("SessionTransactions.findBySessionId")
             .setParameter("sessionId", sessionId)
             .getResultList();
+    }
+    
+    public SessionTransactions findByIds(int sessionId, int transactionId){
+        List<SessionTransactions> l = getEntityManager()
+            .createNamedQuery("SessionTransactions.findByIds")
+            .setParameter("transactionId", transactionId)
+            .setParameter("sessionId", sessionId)
+            .getResultList();
+        if(l.isEmpty()) return null;
+        return l.get(0);
     }
     
 }

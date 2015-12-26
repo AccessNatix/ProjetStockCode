@@ -5,8 +5,10 @@
  */
 package modele.entity.handler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import modele.entity.Article;
 import modele.entity.Cashier;
 import modele.entity.ClientArticles;
 import modele.entity.Key;
@@ -31,14 +33,35 @@ public class CashierHelper extends Observable{
         return aTransactionHelper.startTransaction(type);
     }
     
+    public boolean addArticlesRefund(ClientHelper clientHelper)
+    {
+        List<ClientArticles> list = clientHelper.getArticles();
+        
+        return true;
+    }
+    
     public boolean addArticles(ClientHelper clientHelper){
         List<ClientArticles> list = clientHelper.getArticles();
         
         for(ClientArticles articles : list){
             if(aTransactionHelper.addArticle(articles.getArticleId(), articles.getQuantity()) == false) return false;
         }
+        
+        List<TransactionArticles> transArticles = aTransactionHelper.getArticles();
+        
+        /**
+         * On récupéere l'ensemble des articles
+         */
+        List<Article> articles = new ArrayList<>();
+        for(TransactionArticles article : transArticles)
+        {
+            articles.add(article.getArticleId());
+        }
+        
+        this.setChanged();
+        this.notifyObservers(articles);
+        
         return true;
-        //return aTransactionHelper.addArticle(article, quantity);
     }
     
     public boolean connect(String pseudo, String password){

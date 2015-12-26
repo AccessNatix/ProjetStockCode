@@ -6,8 +6,10 @@
 package modele.entity.handler;
 
 import controller.jpacontroller.CommandedArticlesJpaController;
+import controller.jpacontroller.ProviderJpaController;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Observable;
 import modele.SystemStock;
 import modele.entity.Article;
 import modele.entity.Command;
@@ -20,7 +22,7 @@ import modele.entity.factory.EntityFactory;
  *
  * @author yo
  */
-public class RetailerHelper {
+public class RetailerHelper extends Observable{
     
     private Retailer aRetailer;
     
@@ -51,15 +53,54 @@ public class RetailerHelper {
         return true;
     }
     
+    public List<CommandedArticles> printCommands()
+    {
+        List<CommandedArticles> tmp = CommandedArticlesJpaController.getController().findCommandedArticlesEntities(); 
+        
+        this.setChanged();
+        this.notifyObservers(tmp);
+        
+        return tmp;
+    }
+    
     public List<CommandedArticles> displayCommand(Command command){
-        return CommandedArticlesJpaController.getController().findByCommandId(command.getId());
+        List<CommandedArticles> tmp = CommandedArticlesJpaController.getController().findByCommandId(command.getId()); 
+
+        this.setChanged();
+        this.notifyObservers(tmp);
+        
+        return tmp;
+    }
+    
+    /**
+     * Récupérer la liste des providers
+     * @return 
+     */
+    public List<Provider> getProvider()
+    {
+        List<Provider> provider = ProviderJpaController.getController().findProviderEntities();
+        
+        this.setChanged();
+        this.notifyObservers(provider);
+        
+        return provider;
     }
     
     public HashMap<Article,Integer> printStock(){
-        return SystemStock.getSystemStock().getStock();
+        HashMap<Article, Integer> tmp = SystemStock.getSystemStock().getStock();
+        
+        this.setChanged();
+        this.notifyObservers(tmp);
+        
+        return tmp;
     }
     
     public HashMap<Article,Integer> printInsufficientArticle(){
-        return SystemStock.getSystemStock().checkStock();
+        HashMap<Article, Integer> tmp = SystemStock.getSystemStock().checkStock();
+        
+        this.setChanged();
+        this.notifyObservers(tmp);
+        
+        return tmp;
     }
 }

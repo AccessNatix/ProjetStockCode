@@ -49,6 +49,7 @@ public class TransactionHelper {
             HashMap<String, Object> map = new HashMap<>();
             map.put("article", article);
             map.put("quantity", quantity);
+            map.put("transaction", aTransaction);
             transactionArticles = EntityFactory.create(new TransactionArticles(), map);
             if(transactionArticles == null) return false;
         }else{
@@ -87,7 +88,7 @@ public class TransactionHelper {
         return true;
     }
     
-    public boolean cancelTransaction(){
+    public boolean cancelTransaction(){        
         List<TransactionArticles> l = getArticles();
         for(TransactionArticles articles : l){
             try {
@@ -97,6 +98,10 @@ public class TransactionHelper {
                 return false;
             }
         }
+        
+        boolean b = aSessionHelper.cancelTransaction(aTransaction);
+        
+        if(b == false) return false;
         
         try {
             TransactionJpaController.getController().destroy(aTransaction.getId());

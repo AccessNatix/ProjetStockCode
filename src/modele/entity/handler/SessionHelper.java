@@ -6,7 +6,12 @@
 package modele.entity.handler;
 
 import controller.jpacontroller.SessionJpaController;
+import controller.jpacontroller.SessionTransactionsJpaController;
+import controller.jpacontroller.TransactionJpaController;
+import controller.jpacontroller.exceptions.NonexistentEntityException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modele.entity.Session;
 import modele.entity.SessionTransactions;
 import modele.entity.Transaction;
@@ -36,5 +41,17 @@ public class SessionHelper {
         map.put("transaction", transaction);
         SessionTransactions sessionTransactions = EntityFactory.create(new SessionTransactions(), map);
         return sessionTransactions != null;
+    }
+    
+    public boolean cancelTransaction(Transaction transaction){
+        SessionTransactions sessionTransactions = SessionTransactionsJpaController.getController().findByIds(aCurrentSession.getId(), transaction.getId());
+        if(sessionTransactions == null) return false;
+        try {
+            SessionTransactionsJpaController.getController().destroy(sessionTransactions.getId());
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(SessionHelper.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
     }
 }
