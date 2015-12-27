@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import modele.entity.Cashier;
 import modele.entity.Employee;
 
@@ -264,7 +265,12 @@ public class EmployeeJpaController implements Serializable {
     }
     
     public void reloveAll(){
-        getEntityManager().createNamedQuery("Employee.removeAll").executeUpdate();
+        EntityManager em = getEntityManager();
+        EntityTransaction transac = em.getTransaction();
+        transac.begin();
+        em.createNamedQuery("Employee.removeAll").executeUpdate();
+        transac.commit();
+        em.close();
     }
     
 }

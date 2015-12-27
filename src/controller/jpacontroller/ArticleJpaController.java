@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import modele.entity.Article;
 import modele.entity.CommandedArticles;
 import modele.entity.TransactionArticles;
@@ -496,6 +497,11 @@ public class ArticleJpaController implements Serializable {
     
     
     public void reloveAll(){
-        getEntityManager().createNamedQuery("Article.removeAll").executeUpdate();
+        EntityManager em = getEntityManager();
+        EntityTransaction transac = em.getTransaction();
+        transac.begin();
+        em.createNamedQuery("Article.removeAll").executeUpdate();
+        transac.commit();
+        em.close();
     }
 }

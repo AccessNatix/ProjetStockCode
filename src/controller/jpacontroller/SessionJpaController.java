@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import modele.entity.Session;
 
 /**
@@ -220,6 +221,11 @@ public class SessionJpaController implements Serializable {
     
     
     public void reloveAll(){
-        getEntityManager().createNamedQuery("Session.removeAll").executeUpdate();
+        EntityManager em = getEntityManager();
+        EntityTransaction transac = em.getTransaction();
+        transac.begin();
+        em.createNamedQuery("Session.removeAll").executeUpdate();
+        transac.commit();
+        em.close();
     }
 }

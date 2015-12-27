@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import modele.entity.WarehouseArticles;
 
 /**
@@ -212,7 +213,12 @@ public class WarehouseArticlesJpaController implements Serializable {
     }
     
     public void reloveAll(){
-        getEntityManager().createNamedQuery("WarehouseArticles.removeAll").executeUpdate();
+        EntityManager em = getEntityManager();
+        EntityTransaction transac = em.getTransaction();
+        transac.begin();
+        em.createNamedQuery("WarehouseArticles.removeAll").executeUpdate();
+        transac.commit();
+        em.close();
     }
     
 }

@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.EntityTransaction;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import modele.entity.Client;
@@ -220,13 +221,23 @@ public class ClientArticlesJpaController implements Serializable {
     }
     
     public void removeByClientId(int clientId){
-        getEntityManager().createNamedQuery("ClientArticles.removeByClientId")
+        EntityManager em = getEntityManager();
+        EntityTransaction transac = em.getTransaction();
+        transac.begin();
+        em.createNamedQuery("ClientArticles.removeByClientId")
             .setParameter("clientId", clientId)
             .executeUpdate();
+        transac.commit();
+        em.close();
     }
     
     
     public void reloveAll(){
-        getEntityManager().createNamedQuery("ClientArticles.removeAll").executeUpdate();
+        EntityManager em = getEntityManager();
+        EntityTransaction transac = em.getTransaction();
+        transac.begin();
+        em.createNamedQuery("ClientArticles.removeAll").executeUpdate();
+        transac.commit();
+        em.close();
     }
 }

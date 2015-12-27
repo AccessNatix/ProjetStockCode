@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.EntityTransaction;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import modele.entity.Cashier;
@@ -175,6 +176,11 @@ public class CashierJpaController implements Serializable {
     
     
     public void reloveAll(){
-        getEntityManager().createNamedQuery("Cashier.removeAll").executeUpdate();
+        EntityManager em = getEntityManager();
+        EntityTransaction transac = em.getTransaction();
+        transac.begin();
+        em.createNamedQuery("Cashier.removeAll").executeUpdate();
+        transac.commit();
+        em.close();
     }
 }

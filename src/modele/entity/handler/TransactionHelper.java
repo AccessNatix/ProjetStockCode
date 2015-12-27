@@ -90,6 +90,7 @@ public class TransactionHelper {
     }
     
     public boolean cancelTransaction(){        
+        if(aTransaction == null) return true;
         List<TransactionArticles> l = getArticles();
         for(TransactionArticles articles : l){
             try {
@@ -127,6 +128,7 @@ public class TransactionHelper {
         map.put("price", price);
         map.put("transaction", aTransaction);
         Payment payment = EntityFactory.create(new Payment(), map);
+        aTransaction = null;
         return payment != null;
     }
     
@@ -136,6 +138,7 @@ public class TransactionHelper {
         for(TransactionArticles articles : l){
             SystemStock.getSystemStock().addArticleToWarehouse(articles.getArticleId(), articles.getQuantity());
         }
+        aTransaction = null;
         return true;
     }
     

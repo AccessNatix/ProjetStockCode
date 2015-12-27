@@ -28,7 +28,7 @@
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.password" value="shelsea177"/>
       <property name="javax.persistence.schema-generation.database.action" value="drop-and-create-tables"/>
-      <!--      <property name="eclipselink.ddl-generation" value="none"/>
+<!--            <property name="eclipselink.ddl-generation" value="none"/>
       <property name="eclipselink.logging.level.sql" value="FINE"/>
       <property name="eclipselink.logging.level" value="FINEST"/>
       <property name="eclipselink.logging.parameters" value="true"/>

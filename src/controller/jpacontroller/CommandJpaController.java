@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import modele.entity.Command;
 import modele.entity.RetailerCommands;
 
@@ -303,6 +304,11 @@ public class CommandJpaController implements Serializable {
     
     
     public void reloveAll(){
-        getEntityManager().createNamedQuery("Command.removeAll").executeUpdate();
+        EntityManager em = getEntityManager();
+        EntityTransaction transac = em.getTransaction();
+        transac.begin();
+        em.createNamedQuery("Command.removeAll").executeUpdate();
+        transac.commit();
+        em.close();
     }
 }

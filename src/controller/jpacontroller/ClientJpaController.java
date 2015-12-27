@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import modele.entity.Client;
 import modele.entity.ClientArticlesReturn;
 
@@ -265,6 +266,11 @@ public class ClientJpaController implements Serializable {
     
     
     public void reloveAll(){
-        getEntityManager().createNamedQuery("Client.removeAll").executeUpdate();
+        EntityManager em = getEntityManager();
+        EntityTransaction transac = em.getTransaction();
+        transac.begin();
+        em.createNamedQuery("Client.removeAll").executeUpdate();
+        transac.commit();
+        em.close();
     }
 }

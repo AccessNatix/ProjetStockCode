@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import modele.entity.CashRegister;
 
 /**
@@ -211,6 +212,11 @@ public class CashRegisterJpaController implements Serializable {
     
     
     public void reloveAll(){
-        getEntityManager().createNamedQuery("CashRegister.removeAll").executeUpdate();
+        EntityManager em = getEntityManager();
+        EntityTransaction transac = em.getTransaction();
+        transac.begin();
+        em.createNamedQuery("CashRegister.removeAll").executeUpdate();
+        transac.commit();
+        em.close();
     }
 }

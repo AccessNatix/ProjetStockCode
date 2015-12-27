@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import modele.entity.AisleArticles;
 
 /**
@@ -212,7 +213,12 @@ public class AisleArticlesJpaController implements Serializable {
     }
     
     public void reloveAll(){
-        getEntityManager().createNamedQuery("AisleArticles.removeAll").executeUpdate();
+        EntityManager em = getEntityManager();
+        EntityTransaction transac = em.getTransaction();
+        transac.begin();
+        em.createNamedQuery("AisleArticles.removeAll").executeUpdate();
+        transac.commit();
+        em.close();
     }
     
 }
