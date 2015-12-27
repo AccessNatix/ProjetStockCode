@@ -12,6 +12,7 @@ import controller.jpacontroller.ArticleJpaController;
 import controller.jpacontroller.CashRegisterJpaController;
 import controller.jpacontroller.CashierJpaController;
 import controller.jpacontroller.ClientArticlesJpaController;
+import controller.jpacontroller.ClientArticlesReturnJpaController;
 import controller.jpacontroller.ClientJpaController;
 import controller.jpacontroller.CommandJpaController;
 import controller.jpacontroller.CommandedArticlesJpaController;
@@ -40,6 +41,7 @@ import modele.entity.CashRegister;
 import modele.entity.Cashier;
 import modele.entity.Client;
 import modele.entity.ClientArticles;
+import modele.entity.ClientArticlesReturn;
 import modele.entity.Command;
 import modele.entity.CommandedArticles;
 import modele.entity.Employee;
@@ -74,7 +76,8 @@ public class Application {
      */
     // Modèle
     private CashierHelper aCashierHelper;
-    private ClientHelper aClientHelper;
+    private ClientHelper aClientHelperBuy;
+    private ClientHelper aClientHelperRefund;
     
     // Vue
     private CashierLoginView aCashierLoginView;
@@ -105,11 +108,12 @@ public class Application {
     }
     
     private void clearBDD(){
-        AisleArticlesJpaController aisleArticlesJpaController = AisleArticlesJpaController.getController();
+AisleArticlesJpaController aisleArticlesJpaController = AisleArticlesJpaController.getController();
         ArticleJpaController articleJpaController = ArticleJpaController.getController();
         CashRegisterJpaController cashRegisterJpaController = CashRegisterJpaController.getController();
         CashierJpaController cashierJpaController = CashierJpaController.getController();
         ClientArticlesJpaController clientArticlesJpaController = ClientArticlesJpaController.getController();
+        ClientArticlesReturnJpaController clientArticlesReturnJpaController = ClientArticlesReturnJpaController.getController();
         ClientJpaController clientJpaController = ClientJpaController.getController();
         CommandJpaController commandJpaController = CommandJpaController.getController();
         CommandedArticlesJpaController commandedArticlesJpaController = CommandedArticlesJpaController.getController();
@@ -132,6 +136,11 @@ public class Application {
             }        
         for(ClientArticles aa : clientArticlesJpaController.findClientArticlesEntities()) try {
             clientArticlesJpaController.destroy(aa.getId());
+            } catch (NonexistentEntityException ex) {
+                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
+            }         
+        for(ClientArticlesReturn aa : clientArticlesReturnJpaController.findClientArticlesReturnEntities()) try {
+            clientArticlesReturnJpaController.destroy(aa.getId());
             } catch (NonexistentEntityException ex) {
                 Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
             }        
@@ -292,19 +301,27 @@ public class Application {
         /**
          * Création du client et du helper
          */
-        Client client = ObjectFactory.createClient("asterix", "legollois");
-        this.aClientHelper = new ClientHelper(client);
+        Client clientBuy = ObjectFactory.createClient("asterix", "legollois");
+        this.aClientHelperBuy = new ClientHelper(clientBuy);
         
         for(Entry<Article, Integer> article : articles.entrySet())
         {
-            this.aClientHelper.addArticle(article.getKey(), 1, true);
+            this.aClientHelperBuy.addArticle(article.getKey(), 1, true);
+        }
+        
+        Client clientRefund = ObjectFactory.createClient("obelix", "legollois");
+        this.aClientHelperRefund = new ClientHelper(clientRefund);
+        
+        for(Entry<Article, Integer> article : articles.entrySet())
+        {
+            //this.aClientHelperRefund.addArticle(article.getKey(), 2, false);
         }
         
         this.aCashierLoginView = new CashierLoginView();
         this.aCashierView = new CashierView();
         
         // Controller
-        this.aControllerCashier = new ControllerCashier(aCashierLoginView, aCashierView, aCashierHelper, aClientHelper);
+        this.aControllerCashier = new ControllerCashier(aCashierLoginView, aCashierView, aCashierHelper, aClientHelperBuy,aClientHelperRefund);
         
         // set up action
         this.aCashierLoginView.addController(this.aControllerCashier);

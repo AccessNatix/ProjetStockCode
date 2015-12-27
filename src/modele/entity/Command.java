@@ -29,8 +29,13 @@ import javax.persistence.Table;
 @Table(name = "command")
 @NamedQueries({
     @NamedQuery(name = "Command.findAll", query = "SELECT c FROM Command c"),
+    @NamedQuery(name = "Command.findNotDealt", query = "SELECT c FROM Command c WHERE c.dealt = 0"),
+    @NamedQuery(name = "Command.findDealt", query = "SELECT c FROM Command c WHERE c.dealt = 1"),
     @NamedQuery(name = "Command.findById", query = "SELECT c FROM Command c WHERE c.id = :id")})
 public class Command implements Serializable {
+
+    @Column(name = "dealt")
+    private Integer dealt;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,6 +52,7 @@ public class Command implements Serializable {
     private Collection<RetailerCommands> retailerCommandsCollection;
 
     public Command() {
+        dealt = 0;
     }
 
     public Command(Integer id) {
@@ -108,6 +114,14 @@ public class Command implements Serializable {
     @Override
     public String toString() {
         return "modele.entity.Command[ id=" + id + " ]";
+    }
+
+    public Integer getDealt() {
+        return dealt;
+    }
+
+    public void setDealt() {
+        this.dealt = 1;
     }
     
 }

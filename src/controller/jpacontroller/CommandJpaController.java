@@ -16,6 +16,7 @@ import modele.entity.Provider;
 import modele.entity.CommandedArticles;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -290,6 +291,14 @@ public class CommandJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+    public List<Command> getNonDealt(){
+        return getEntityManager().createNamedQuery("Command.findNotDealt").getResultList();
+    }   
+    
+    public List<Command> getDealt(){
+        return getEntityManager().createNamedQuery("Command.findDealt").getResultList();
     }
     
 }

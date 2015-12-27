@@ -551,6 +551,15 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
         return this.commands;
     }
     
+    public void cleanCommands()
+    {
+        if (tableModelCommands.getRowCount() > 0) {
+            for (int i = tableModelCommands.getRowCount() - 1; i > -1; i--) {
+                tableModelCommands.removeRow(i);
+            }
+        }
+    }
+    
     public JLabel getProviderInput()
     {
         return this.providerInput;
@@ -606,12 +615,8 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                 currentTab = TabbedPane.PROVIDER;
                 break;
         }
-    
-        System.err.println(o1.toString());
-        
         if(o1 instanceof List)
         {   
-            System.err.println("List");
             
             switch(currentTab)
             {
@@ -681,7 +686,7 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                     {
                         List<Object> row = new ArrayList<Object>();
                         row.add(stock.getKey().getName());
-                        row.add(String.valueOf(stock.getKey().getStock()));
+                        row.add(String.valueOf(stock.getValue()));
                         row.add(String.valueOf(stock.getKey().getPrice().doubleValue()));
                         this.tableModelStock.addRow(row.toArray());
                     }
@@ -702,7 +707,7 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                     {
                         List<Object> row = new ArrayList<Object>();
                         row.add(stock.getKey().getName());
-                        row.add(String.valueOf(stock.getKey().getStock()));
+                        row.add(String.valueOf(stock.getValue()));
                         row.add(String.valueOf(stock.getKey().getPrice().doubleValue()));
                         row.add(stock.getKey().getProviderId().getName());
                         this.tableModelUnderStock.addRow(row.toArray());

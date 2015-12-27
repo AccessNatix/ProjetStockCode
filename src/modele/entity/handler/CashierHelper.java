@@ -6,6 +6,7 @@
 package modele.entity.handler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 import modele.entity.Article;
@@ -33,14 +34,7 @@ public class CashierHelper extends Observable{
     public boolean startTransaction(String type){
         return aTransactionHelper.startTransaction(type);
     }
-    
-    public boolean addArticlesRefund(ClientHelper clientHelper)
-    {
-        List<ClientArticles> list = clientHelper.getArticles();
-        
-        return true;
-    }
-    
+
     public boolean addArticles(ClientHelper clientHelper, boolean bought){
         if(bought == true) return addArticleBought(clientHelper);
         return addArticleReturned(clientHelper);
@@ -65,7 +59,6 @@ public class CashierHelper extends Observable{
             List<Article> articles = new ArrayList<>();
             this.setChanged();
             this.notifyObservers(articles);
-            System.err.println("Casse toi !");
             return true;
         }
         else
@@ -104,10 +97,10 @@ public class CashierHelper extends Observable{
         /**
          * On récupéere l'ensemble des articles
          */
-        List<Article> articles = new ArrayList<>();
+        HashMap<Article,Integer> articles = new HashMap<>();
         for(TransactionArticles article : transArticles)
         {
-            articles.add(article.getArticleId());
+            articles.put(article.getArticleId(),article.getQuantity());
         }
         
         this.setChanged();
@@ -128,10 +121,10 @@ public class CashierHelper extends Observable{
         /**
          * On récupéere l'ensemble des articles
          */
-        List<Article> articles = new ArrayList<>();
+        HashMap<Article,Integer> articles = new HashMap<>();
         for(TransactionArticles article : transArticles)
         {
-            articles.add(article.getArticleId());
+            articles.put(article.getArticleId(),article.getQuantity());
         }
         
         this.setChanged();

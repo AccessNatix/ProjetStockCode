@@ -44,8 +44,6 @@ public class ClientHelper {
     
     private boolean addArticleBuy(Article article, int quantity){
         SystemStock systemStock = SystemStock.getSystemStock();
-        boolean b = systemStock.removeArticleFromAisle(article, quantity);
-        if(b == false) return false;
 
         ClientArticlesJpaController clientArticlesJpaController = ClientArticlesJpaController.getController();
         ClientArticles clientArticle = clientArticlesJpaController.findByIds(aClient.getId(), article.getId());

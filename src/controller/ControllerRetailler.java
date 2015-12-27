@@ -47,7 +47,7 @@ public class ControllerRetailler implements ActionListener, ChangeListener{
      * @param login
      * @param password 
      */
-    public void login(String login, String password)
+    public void login()
     {
         this.aRetaillerLoginView.setVisible(false);
         this.aRetaillerView.setVisible(true);
@@ -114,7 +114,7 @@ public class ControllerRetailler implements ActionListener, ChangeListener{
         
         if(ae.getSource() == this.aRetaillerLoginView.getIdentification())
         {
-            this.login("", "");
+            this.login();
         }
         else if(ae.getSource() == this.aRetaillerView.getCommandButton())
         {
@@ -128,6 +128,7 @@ public class ControllerRetailler implements ActionListener, ChangeListener{
         {
             String tmp = (String)this.aRetaillerView.getCommands().getValueAt(this.aRetaillerView.getCommands().getSelectedRow(), 0);
             this.updateStock(tmp);
+            this.aRetaillerView.cleanCommands();
         }
     }
     

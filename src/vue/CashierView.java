@@ -5,10 +5,11 @@
  */
 package vue;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JButton;
@@ -39,7 +40,7 @@ public class CashierView extends javax.swing.JFrame implements Observer{
             new Object [][] {
             },
             new String [] 
-                {"Nom article","Prix"}
+                {"Nom article","Quantitée","Prix"}
             );
         
         this.tableModelRembourse = new DefaultTableModel(
@@ -47,7 +48,7 @@ public class CashierView extends javax.swing.JFrame implements Observer{
 
             },
             new String [] 
-                {"Nom article","Prix"}
+                {"Nom article","Quantitée","Prix"}
             );
         
         this.jTable1.setModel(tableModelAchat);
@@ -62,6 +63,8 @@ public class CashierView extends javax.swing.JFrame implements Observer{
                 }
             }
         });
+        
+        
     }
 
     /**
@@ -537,11 +540,11 @@ public class CashierView extends javax.swing.JFrame implements Observer{
     @Override
     public void update(Observable o, Object o1) {
         
-        if(o1 instanceof List)
+        if(o1 instanceof HashMap)
         {            
-            List<Article> listArticle = (List<Article>) o1;
+            HashMap<Article,Integer> articles = (HashMap<Article,Integer>) o1;
             
-            if(listArticle.size() == 0)
+            if(articles.size() == 0)
             {
                 this.cleanInterface();
             }
@@ -551,12 +554,13 @@ public class CashierView extends javax.swing.JFrame implements Observer{
             /**
              * Initialiser l'ensemble des objets
              */
-            for(Article article : listArticle)
+            for(Map.Entry<Article,Integer> article : articles.entrySet())
             {
-                total += article.getPrice().doubleValue();
+                total += article.getKey().getPrice().doubleValue();
                 List<Object> row = new ArrayList<Object>();
-                row.add(article.getName());
-                row.add(String.valueOf(article.getPrice().doubleValue()));
+                row.add(article.getKey().getName());
+                row.add(String.valueOf(article.getKey().getPrice().doubleValue()));
+                row.add(String.valueOf(article.getValue()));
                 this.tableModelAchat.addRow(row.toArray());
                 this.tableModelRembourse.addRow(row.toArray());
             }
@@ -578,14 +582,16 @@ public class CashierView extends javax.swing.JFrame implements Observer{
     
     public void cleanInterface()
     {
-        for(int i = 0; i < this.tableModelAchat.getRowCount(); i++)
-        {
-            this.tableModelAchat.removeRow(i);
+        if (tableModelAchat.getRowCount() > 0) {
+            for (int i = tableModelAchat.getRowCount() - 1; i > -1; i--) {
+                tableModelAchat.removeRow(i);
+            }
         }
-        
-        for(int i = 0; i < this.tableModelRembourse.getRowCount(); i++)
-        {
-            this.tableModelRembourse.removeRow(i);
+
+        if (tableModelRembourse.getRowCount() > 0) {
+            for (int i = tableModelRembourse.getRowCount() - 1; i > -1; i--) {
+                tableModelRembourse.removeRow(i);
+            }
         }
         
         this.totalprice.setText("0.0");
