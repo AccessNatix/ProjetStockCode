@@ -128,11 +128,13 @@ public class ControllerCashier extends Observable implements Observer, ActionLis
     public void paye()
     {
         this.aCashierHandler.pay(aClientHelperBuy, "cb");
+        this.aCashierHandler.startTransaction("paye");
     }
     
     public void refund()
     {
         this.aCashierHandler.refund(aClientHelperRefund);
+        this.aCashierHandler.startTransaction("refund");
         this.aCashierView.cleanInterface();
     }
 
