@@ -1,10 +1,16 @@
 package controller;
 
+import controller.jpacontroller.ClientJpaController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import modele.SystemStock;
 import modele.entity.Article;
 import modele.entity.ClientArticles;
 import modele.entity.handler.CashierHelper;
@@ -17,7 +23,7 @@ import vue.CashierView;
  * 
  * @author anatole
  */
-public class ControllerCashier implements ActionListener, ChangeListener{
+public class ControllerCashier extends Observable implements Observer, ActionListener, ChangeListener{
     
     // Modèle
     private final CashierHelper aCashierHandler;
@@ -91,6 +97,9 @@ public class ControllerCashier implements ActionListener, ChangeListener{
         }
                         
         this.aCashierHandler.addArticles(this.aClientHelperBuy, true);
+        
+        this.setChanged();
+        this.notifyObservers();
     }
     
     /**
@@ -105,6 +114,9 @@ public class ControllerCashier implements ActionListener, ChangeListener{
         }        
         
         this.aCashierHandler.addArticles(this.aClientHelperRefund, false);
+        
+        this.setChanged();
+        this.notifyObservers();        
     }    
 
     public void cancelTransaction()
@@ -120,6 +132,7 @@ public class ControllerCashier implements ActionListener, ChangeListener{
     
     public void refund()
     {
+        this.aCashierHandler.refund();
         this.aCashierView.cleanInterface();
     }
 
@@ -136,9 +149,6 @@ public class ControllerCashier implements ActionListener, ChangeListener{
             String login = this.aCashierLoginView.getLogin().getText();
             String password = this.aCashierLoginView.getPassword().getText();
             
-            // tentative de connection
-            System.err.println("tentative de connection");
-            
             if(this.login(login, password))
             {
                 this.initTransactionPaye();
@@ -146,29 +156,24 @@ public class ControllerCashier implements ActionListener, ChangeListener{
         }
         else if(this.aCashierView.getScanPayeButton()== ae.getSource())
         {
-            System.err.println("Scan paye !");
             this.scanPaye();
         }
         else if(this.aCashierView.getScanRefundButton()== ae.getSource())
         {
-            System.err.println("Scan refund !");
             this.scanRefund();
         }        
         else if(this.aCashierView.getDisconnect() == ae.getSource())
         {
-            System.err.println("Disconnect");
             this.aCashierLoginView.setVisible(true);
             this.aCashierView.setVisible(false);
         }
         else if(this.aCashierView.getPayeButton() == ae.getSource())
         {
-            System.err.println("Payer !");
             this.paye();
             this.aCashierView.cleanInterface();
         }
         else if(this.aCashierView.getRefundButton() == ae.getSource())
         {
-            System.err.println("Rembourser");
             this.refund();
             this.aCashierView.cleanInterface();
         }
@@ -185,16 +190,18 @@ public class ControllerCashier implements ActionListener, ChangeListener{
         switch(sourceTabbedPane.getTitleAt(index))
         {
             case "Achat":
-                System.err.println("Achat");
                 this.cancelTransaction();
                 this.initTransactionPaye();
                 break;
             case "Rembourser":
-                System.err.println("Rembourser");
                 this.cancelTransaction();
                 this.initTransactionRefund();
                 break;
         }
+    }
+
+    @Override
+    public void update(Observable o, Object o1) {
     }
     
 }

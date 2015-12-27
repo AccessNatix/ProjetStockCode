@@ -5,11 +5,15 @@
  */
 package modele.entity.handler;
 
+import controller.jpacontroller.CommandJpaController;
 import controller.jpacontroller.CommandedArticlesJpaController;
 import controller.jpacontroller.ProviderJpaController;
+import controller.jpacontroller.exceptions.NonexistentEntityException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modele.SystemStock;
 import modele.entity.Article;
 import modele.entity.Command;
@@ -46,11 +50,24 @@ public class RetailerHelper extends Observable{
     }
     
     public boolean handleCommand(Command command){
-        List<CommandedArticles> list = CommandedArticlesJpaController.getController().findByCommandId(command.getId());
-        for(CommandedArticles commandedArticles : list){
-            System.err.println("Quantity = " + commandedArticles.getQuantity());
-            SystemStock.getSystemStock().addArticleToWarehouse(commandedArticles.getArticleId(), commandedArticles.getQuantity());
+        if(command.getDealt() == 0)
+        {
+            // ok
+            command.setDealt();
+            try {
+                CommandJpaController.getController().edit(command);
+            } catch (NonexistentEntityException ex) {
+                Logger.getLogger(RetailerHelper.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(RetailerHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            List<CommandedArticles> list = CommandedArticlesJpaController.getController().findByCommandId(command.getId());
+            for(CommandedArticles commandedArticles : list){
+                SystemStock.getSystemStock().addArticleToWarehouse(commandedArticles.getArticleId(), commandedArticles.getQuantity());
+            }            
         }
+
         return true;
     }
     

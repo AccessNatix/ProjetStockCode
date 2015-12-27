@@ -27,6 +27,7 @@ import javax.persistence.Table;
 @Table(name = "transaction")
 @NamedQueries({
     @NamedQuery(name = "Transaction.findAll", query = "SELECT t FROM Transaction t"),
+    @NamedQuery(name = "Transaction.removeAll", query = "DELETE FROM Transaction t"),
     @NamedQuery(name = "Transaction.findById", query = "SELECT t FROM Transaction t WHERE t.id = :id"),
     @NamedQuery(name = "Transaction.findByType", query = "SELECT t FROM Transaction t WHERE t.type = :type")})
 public class Transaction implements Serializable {

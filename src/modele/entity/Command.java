@@ -29,6 +29,7 @@ import javax.persistence.Table;
 @Table(name = "command")
 @NamedQueries({
     @NamedQuery(name = "Command.findAll", query = "SELECT c FROM Command c"),
+    @NamedQuery(name = "Command.removeAll", query = "DELETE FROM Command c"),
     @NamedQuery(name = "Command.findNotDealt", query = "SELECT c FROM Command c WHERE c.dealt = 0"),
     @NamedQuery(name = "Command.findDealt", query = "SELECT c FROM Command c WHERE c.dealt = 1"),
     @NamedQuery(name = "Command.findById", query = "SELECT c FROM Command c WHERE c.id = :id")})

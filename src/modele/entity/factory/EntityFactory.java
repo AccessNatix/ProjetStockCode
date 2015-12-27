@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package modele.entity.factory;
 
 import controller.jpacontroller.AisleArticlesJpaController;
@@ -139,7 +134,6 @@ public class EntityFactory {
             Article article = (Article) attributes.get("article");
             Client client = (Client) attributes.get("client");
             int quantity = (Integer) attributes.get("quantity");
-            if(SystemStock.getSystemStock().removeArticleFromAisle(article, quantity) == false) return null;
         
             ClientArticles clientArticle = new ClientArticles();
             clientArticle.setArticleId(article);

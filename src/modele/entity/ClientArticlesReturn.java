@@ -26,9 +26,11 @@ import javax.persistence.Table;
 @Table(name = "clientArticlesReturn")
 @NamedQueries({
     @NamedQuery(name = "ClientArticlesReturn.findAll", query = "SELECT c FROM ClientArticlesReturn c"),
+    @NamedQuery(name = "ClientArticlesReturn.removeAll", query = "DELETE FROM ClientArticlesReturn c"),
     @NamedQuery(name = "ClientArticlesReturn.findById", query = "SELECT c FROM ClientArticlesReturn c WHERE c.id = :id"),
     @NamedQuery(name = "ClientArticlesReturn.findByIds", query = "SELECT c FROM ClientArticlesReturn c WHERE c.articleId.id = :articleId AND c.clientId.id = :clientId"),
     @NamedQuery(name = "ClientArticlesReturn.findByClientId", query = "SELECT c FROM ClientArticlesReturn c WHERE c.clientId.id = :clientId"),
+    @NamedQuery(name = "ClientArticlesReturn.removeByClientId", query = "DELETE FROM ClientArticlesReturn c WHERE c.clientId.id = :clientId"),
     @NamedQuery(name = "ClientArticlesReturn.findByQuantity", query = "SELECT c FROM ClientArticlesReturn c WHERE c.quantity = :quantity")})
 public class ClientArticlesReturn implements Serializable {
 

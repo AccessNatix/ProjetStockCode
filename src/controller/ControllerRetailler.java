@@ -11,6 +11,8 @@ import controller.jpacontroller.ProviderJpaController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -25,7 +27,7 @@ import vue.RetaillerView;
  *
  * @author anatole
  */
-public class ControllerRetailler implements ActionListener, ChangeListener{
+public class ControllerRetailler extends Observable implements Observer,  ActionListener, ChangeListener{
 
     // Modèle
     private final RetailerHelper aRetaillerHandler;
@@ -66,9 +68,9 @@ public class ControllerRetailler implements ActionListener, ChangeListener{
     public void updateStock(String id)
     {
         Command command = CommandJpaController.getController().findCommand(Integer.valueOf(id));
-        
-        System.err.println(command.getId());
+
         this.aRetaillerHandler.handleCommand(command);
+        this.aRetaillerHandler.printCommands();
     }
     
     /**
@@ -122,13 +124,18 @@ public class ControllerRetailler implements ActionListener, ChangeListener{
             int quantiy = Integer.valueOf(this.aRetaillerView.getQuantity().getText());
             String provider = (String)this.aRetaillerView.getProviderInput().getText();
             
-            this.doCommand(nameArticle, quantiy, provider);
+            if(!nameArticle.equals("None"))
+            {
+                this.doCommand(nameArticle, quantiy, provider);
+            }
         }
         else if(ae.getSource() == this.aRetaillerView.getUpdateButton())
         {
-            String tmp = (String)this.aRetaillerView.getCommands().getValueAt(this.aRetaillerView.getCommands().getSelectedRow(), 0);
-            this.updateStock(tmp);
-            this.aRetaillerView.cleanCommands();
+            if(this.aRetaillerView.getCommands().getRowCount() != 0)
+            {
+                String tmp = (String)this.aRetaillerView.getCommands().getValueAt(this.aRetaillerView.getCommands().getSelectedRow(), 0);
+                this.updateStock(tmp);                
+            }
         }
     }
     
@@ -139,20 +146,30 @@ public class ControllerRetailler implements ActionListener, ChangeListener{
         switch(sourceTabbedPane.getTitleAt(index))
         {
             case "affichage stock":
-                System.err.println("Stock");
                 this.showStock();
                 break;
             case "affichage stock sous seuil":
-                System.err.println("Sous seuil");
                 this.showStockUnderThreshold();
                 break;
             case "Affichage commande":
-                System.err.println("Command");
                 this.showCommands();
                 break;
             case "Afficher fournisseur":
-                System.err.println("Fournisseur");
                 this.showProviders();
+                break;
+        }
+    }
+
+    @Override
+    public void update(Observable o, Object o1) {
+        
+        switch(this.aRetaillerView.getTabbedPane().getTitleAt(this.aRetaillerView.getTabbedPane().getSelectedIndex()))
+        {
+            case "affichage stock":
+                this.showStock();
+                break;
+            case "affichage stock sous seuil":
+                this.showStockUnderThreshold();
                 break;
         }
     }

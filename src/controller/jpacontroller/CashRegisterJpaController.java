@@ -209,4 +209,8 @@ public class CashRegisterJpaController implements Serializable {
         }
     }
     
+    
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("CashRegister.removeAll").executeUpdate();
+    }
 }

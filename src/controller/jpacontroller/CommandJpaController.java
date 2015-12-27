@@ -301,4 +301,8 @@ public class CommandJpaController implements Serializable {
         return getEntityManager().createNamedQuery("Command.findDealt").getResultList();
     }
     
+    
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("Command.removeAll").executeUpdate();
+    }
 }

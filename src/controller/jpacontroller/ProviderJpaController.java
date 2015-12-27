@@ -271,4 +271,8 @@ public class ProviderJpaController implements Serializable {
         return l.get(0);
     }
     
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("Provider.removeAll").executeUpdate();
+    }
+    
 }

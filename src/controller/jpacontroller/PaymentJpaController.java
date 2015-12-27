@@ -173,4 +173,8 @@ public class PaymentJpaController implements Serializable {
         }
     }
     
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("Payment.removeAll").executeUpdate();
+    }
+    
 }

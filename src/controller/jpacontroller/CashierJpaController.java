@@ -173,4 +173,8 @@ public class CashierJpaController implements Serializable {
         }
     }
     
+    
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("Cashier.removeAll").executeUpdate();
+    }
 }

@@ -27,6 +27,7 @@ import javax.persistence.Table;
 @Table(name = "client")
 @NamedQueries({
     @NamedQuery(name = "Client.findAll", query = "SELECT c FROM Client c"),
+    @NamedQuery(name = "Client.removeAll", query = "DELETE FROM Client c"),
     @NamedQuery(name = "Client.findById", query = "SELECT c FROM Client c WHERE c.id = :id"),
     @NamedQuery(name = "Client.findByFirstname", query = "SELECT c FROM Client c WHERE c.firstname = :firstname"),
     @NamedQuery(name = "Client.findByLastname", query = "SELECT c FROM Client c WHERE c.lastname = :lastname")})

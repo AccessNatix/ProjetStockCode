@@ -59,12 +59,28 @@ public class CashierView extends javax.swing.JFrame implements Observer{
             public void valueChanged(ListSelectionEvent event) {
                 if (jTable1.getSelectedRow() > -1) {
                     nameproduct.setText((String)jTable1.getValueAt(jTable1.getSelectedRow(), 0));
-                    pricelabel.setText((String)jTable1.getValueAt(jTable1.getSelectedRow(), 1));
+                    pricelabel.setText((String)jTable1.getValueAt(jTable1.getSelectedRow(), 2) + " euros");
                 }
             }
         });
+
+        this.jTable2.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                if (jTable2.getSelectedRow() > -1) {
+                    nameArticleRefund.setText((String)jTable2.getValueAt(jTable2.getSelectedRow(), 0));
+                    priceRefund.setText((String)jTable2.getValueAt(jTable2.getSelectedRow(), 2) + " euros");
+                }
+            }
+        });        
         
+        this.totalprice.setText("0.0 euros");
+        this.nameproduct.setText("None");
+        this.pricelabel.setText("0.0 euros");
         
+        this.nameArticleRefund.setText("None");
+        this.priceRefund.setText("0.0 euros");
+        this.totalrembourse.setText("0.0 euros");
     }
 
     /**
@@ -111,11 +127,11 @@ public class CashierView extends javax.swing.JFrame implements Observer{
         jSeparator5 = new javax.swing.JSeparator();
         scanrembourse = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
+        totalrembourse = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
+        nameArticleRefund = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
+        priceRefund = new javax.swing.JLabel();
         jSeparator8 = new javax.swing.JSeparator();
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
@@ -280,20 +296,20 @@ public class CashierView extends javax.swing.JFrame implements Observer{
         jLabel10.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         jLabel10.setText("Total:");
 
-        jLabel11.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
-        jLabel11.setText("10 euros");
+        totalrembourse.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        totalrembourse.setText("10 euros");
 
         jLabel16.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         jLabel16.setText("Nom article:");
 
-        jLabel17.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
-        jLabel17.setText("Chaussure");
+        nameArticleRefund.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        nameArticleRefund.setText("Chaussure");
 
         jLabel18.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         jLabel18.setText("Prix:");
 
-        jLabel19.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
-        jLabel19.setText("10 euros");
+        priceRefund.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        priceRefund.setText("10 euros");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -313,7 +329,7 @@ public class CashierView extends javax.swing.JFrame implements Observer{
                 .addGap(85, 85, 85)
                 .addComponent(jLabel10)
                 .addGap(4, 4, 4)
-                .addComponent(jLabel11)
+                .addComponent(totalrembourse)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(rembourse, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29))
@@ -329,11 +345,11 @@ public class CashierView extends javax.swing.JFrame implements Observer{
                 .addGap(41, 41, 41)
                 .addComponent(jLabel16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel17)
+                .addComponent(nameArticleRefund)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel18)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel19)
+                .addComponent(priceRefund)
                 .addGap(48, 48, 48))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -352,9 +368,9 @@ public class CashierView extends javax.swing.JFrame implements Observer{
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
-                    .addComponent(jLabel17)
+                    .addComponent(nameArticleRefund)
                     .addComponent(jLabel18)
-                    .addComponent(jLabel19))
+                    .addComponent(priceRefund))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -371,7 +387,7 @@ public class CashierView extends javax.swing.JFrame implements Observer{
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel10)
-                            .addComponent(jLabel11))
+                            .addComponent(totalrembourse))
                         .addGap(30, 30, 30))))
         );
 
@@ -454,15 +470,12 @@ public class CashierView extends javax.swing.JFrame implements Observer{
     private javax.swing.JButton disconnect;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
@@ -485,13 +498,16 @@ public class CashierView extends javax.swing.JFrame implements Observer{
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JLabel nameArticleRefund;
     private javax.swing.JLabel nameproduct;
     private javax.swing.JButton paye;
+    private javax.swing.JLabel priceRefund;
     private javax.swing.JLabel pricelabel;
     private javax.swing.JButton rembourse;
     private javax.swing.JButton scanachat;
     private javax.swing.JButton scanrembourse;
     private javax.swing.JLabel totalprice;
+    private javax.swing.JLabel totalrembourse;
     // End of variables declaration//GEN-END:variables
 
     public JTabbedPane getTabbedPane()
@@ -551,21 +567,34 @@ public class CashierView extends javax.swing.JFrame implements Observer{
             
             double total = 0.0;
             
+            if (tableModelAchat.getRowCount() > 0) {
+                for (int i = tableModelAchat.getRowCount() - 1; i > -1; i--) {
+                    tableModelAchat.removeRow(i);
+                }
+            }
+
+            if (tableModelRembourse.getRowCount() > 0) {
+                for (int i = tableModelRembourse.getRowCount() - 1; i > -1; i--) {
+                    tableModelRembourse.removeRow(i);
+                }
+            }
+            
             /**
              * Initialiser l'ensemble des objets
              */
             for(Map.Entry<Article,Integer> article : articles.entrySet())
             {
-                total += article.getKey().getPrice().doubleValue();
+                total += article.getKey().getPrice().doubleValue()*article.getValue().intValue();
                 List<Object> row = new ArrayList<Object>();
                 row.add(article.getKey().getName());
-                row.add(String.valueOf(article.getKey().getPrice().doubleValue()));
                 row.add(String.valueOf(article.getValue()));
+                row.add(String.valueOf(article.getKey().getPrice().doubleValue()));
                 this.tableModelAchat.addRow(row.toArray());
                 this.tableModelRembourse.addRow(row.toArray());
             }
             
-            this.totalprice.setText(String.valueOf(total));
+            this.totalprice.setText(String.valueOf(total) + " euros");
+            this.totalrembourse.setText(String.valueOf(total) + " euros");
         }
     }
     
@@ -576,6 +605,7 @@ public class CashierView extends javax.swing.JFrame implements Observer{
         this.scanrembourse.addActionListener(action);
         this.paye.addActionListener(action);
         this.rembourse.addActionListener(action);
+        this.disconnect.addActionListener(action);
         
         this.jTabbedPane2.addChangeListener(actionChange);
     }
@@ -594,9 +624,13 @@ public class CashierView extends javax.swing.JFrame implements Observer{
             }
         }
         
-        this.totalprice.setText("0.0");
+        this.totalprice.setText("0.0 euros");
         this.nameproduct.setText("Pas d'article");
-        this.pricelabel.setText("0.0");
+        this.pricelabel.setText("0.0 euros");
+        
+        this.totalrembourse.setText("0.0 euros");
+        this.nameArticleRefund.setText("None");
+        this.priceRefund.setText("0.0 euros");
     }
 
 }

@@ -317,4 +317,8 @@ public class TransactionJpaController implements Serializable {
         }
     }
     
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("Transaction.removeAll").executeUpdate();
+    }
+    
 }

@@ -218,4 +218,8 @@ public class TransactionArticlesJpaController implements Serializable {
         return l.get(0);
     }
     
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("TransactionArticles.removeAll").executeUpdate();
+    }
+    
 }

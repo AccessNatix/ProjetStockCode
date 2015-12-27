@@ -26,6 +26,7 @@ import javax.persistence.Table;
 @Table(name = "retailerCommands")
 @NamedQueries({
     @NamedQuery(name = "RetailerCommands.findAll", query = "SELECT r FROM RetailerCommands r"),
+    @NamedQuery(name = "RetailerCommands.removeAll", query = "DELETE FROM RetailerCommands r"),
     @NamedQuery(name = "RetailerCommands.findByIds", query = "SELECT r FROM RetailerCommands r WHERE r.commandId.id = :commandId AND r.retailerId.id = :retailerId"),
     @NamedQuery(name = "RetailerCommands.findByRetailerId", query = "SELECT r FROM RetailerCommands r WHERE r.retailerId.id = :retailerId"),
     @NamedQuery(name = "RetailerCommands.findById", query = "SELECT r FROM RetailerCommands r WHERE r.id = :id")})

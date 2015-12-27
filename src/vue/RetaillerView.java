@@ -68,7 +68,7 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
             new Object [][] {
             },
             new String [] 
-                {"Numéro commande","Nom article","Quantité","Non du fournisseur"}        
+                {"Numéro commande","Nom article","Quantité","Non du fournisseur","Géré"}      
         );
         
         this.tableModelProviders = new DefaultTableModel(
@@ -82,6 +82,7 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
         this.stockunderthre.setModel(tableModelUnderStock);
         this.commands.setModel(tableModelCommands);
         this.providerstable.setModel(tableModelProviders);
+
         
         this.stockunderthre.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -92,7 +93,7 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                     providerInput.setText((String)stockunderthre.getValueAt(stockunderthre.getSelectedRow(), 3));
                 }
             }
-        });
+        });    
     }
 
     /**
@@ -626,8 +627,7 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                             tableModelCommands.removeRow(i);
                         }
                     }
-                    
-                    System.err.println("COMMAND");
+
                     List<CommandedArticles> commands = (List<CommandedArticles>) o1;
                     
                     for(CommandedArticles command : commands)
@@ -637,6 +637,15 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                         row.add(command.getArticleId().getName());
                         row.add(command.getQuantity());
                         row.add(command.getArticleId().getProviderId().getName());
+                        if(command.getCommandId().getDealt() == 1)
+                        {
+                            row.add("Oui");
+                        }
+                        else
+                        {
+                            row.add("Non");
+                        }
+                        
                         this.tableModelCommands.addRow(row.toArray());
                     }
                     
@@ -648,7 +657,6 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                         }
                     }
 
-                    System.err.println("PROVIDER");
                     List<Provider> providersList = (List<Provider>) o1;
 
                     for(Provider provider: providersList)
@@ -662,14 +670,11 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                     
                     break;
                 default:
-                    System.err.println("UNKNOW");
                     break;
             }
         }
         else if(o1 instanceof HashMap)
         {
-            System.err.println("HashMap");
-            
             switch(currentTab)
             {
                 case STOCK:
@@ -680,7 +685,6 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                     }
                     
                     HashMap<Article, Integer> stocks = (HashMap<Article, Integer>) o1;
-                    System.err.println("STOCK TRUE " + stocks.size());
                     
                     for(Entry<Article,Integer> stock : stocks.entrySet())
                     {
@@ -701,7 +705,6 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
 
                     
                     HashMap<Article, Integer> stockUnder = (HashMap<Article, Integer>) o1;
-                    System.err.println("Size = " + stockUnder.size());
                     
                     for(Entry<Article,Integer> stock : stockUnder.entrySet())
                     {
@@ -714,7 +717,6 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                     }
                     break;
                 default:
-                    System.err.println("default");
                     break;
             }
         }

@@ -494,4 +494,8 @@ public class ArticleJpaController implements Serializable {
         return l.get(0);
     }
     
+    
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("Article.removeAll").executeUpdate();
+    }
 }

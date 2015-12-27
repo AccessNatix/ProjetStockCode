@@ -31,6 +31,7 @@ import javax.persistence.Table;
 @Table(name = "article")
 @NamedQueries({
     @NamedQuery(name = "Article.findAll", query = "SELECT a FROM Article a"),
+    @NamedQuery(name = "Article.removeAll", query = "DELETE FROM Article a"),
     @NamedQuery(name = "Article.findById", query = "SELECT a FROM Article a WHERE a.id = :id"),
     @NamedQuery(name = "Article.findByName", query = "SELECT a FROM Article a WHERE a.name = :name"),
     @NamedQuery(name = "Article.findByStock", query = "SELECT a FROM Article a WHERE a.stock = :stock"),

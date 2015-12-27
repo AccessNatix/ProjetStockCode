@@ -209,4 +209,8 @@ public class RetailerCommandsJpaController implements Serializable {
             .getResultList();
     }
     
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("RetailerCommands.removeAll").executeUpdate();
+    }
+    
 }

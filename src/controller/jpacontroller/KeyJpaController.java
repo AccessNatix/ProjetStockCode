@@ -182,4 +182,8 @@ public class KeyJpaController implements Serializable {
         return l.get(0);
     }
     
+    
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("Key.removeAll").executeUpdate();
+    }
 }

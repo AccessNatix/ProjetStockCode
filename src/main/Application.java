@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main;
 
 import controller.ControllerCashier;
@@ -108,154 +103,27 @@ public class Application {
     }
     
     private void clearBDD(){
-AisleArticlesJpaController aisleArticlesJpaController = AisleArticlesJpaController.getController();
-        ArticleJpaController articleJpaController = ArticleJpaController.getController();
-        CashRegisterJpaController cashRegisterJpaController = CashRegisterJpaController.getController();
-        CashierJpaController cashierJpaController = CashierJpaController.getController();
-        ClientArticlesJpaController clientArticlesJpaController = ClientArticlesJpaController.getController();
-        ClientArticlesReturnJpaController clientArticlesReturnJpaController = ClientArticlesReturnJpaController.getController();
-        ClientJpaController clientJpaController = ClientJpaController.getController();
-        CommandJpaController commandJpaController = CommandJpaController.getController();
-        CommandedArticlesJpaController commandedArticlesJpaController = CommandedArticlesJpaController.getController();
-        EmployeeJpaController employeeJpaController = EmployeeJpaController.getController();
-        KeyJpaController keyJpaController = KeyJpaController.getController();
-        PaymentJpaController paymentJpaController = PaymentJpaController.getController();
-        ProviderJpaController providerJpaController = ProviderJpaController.getController();
-        RetailerCommandsJpaController retailerCommandsJpaController = RetailerCommandsJpaController.getController();
-        RetailerJpaController retailerJpaController = RetailerJpaController.getController();
-        SessionJpaController sessionJpaController = SessionJpaController.getController();
-        SessionTransactionsJpaController sessionTransactionsJpaController = SessionTransactionsJpaController.getController();
-        TransactionArticlesJpaController transactionArticlesJpaController = TransactionArticlesJpaController.getController();
-        TransactionJpaController transactionJpaController = TransactionJpaController.getController();
-        WarehouseArticlesJpaController warehouseArticlesJpaController = WarehouseArticlesJpaController.getController();
         
-        for(AisleArticles aa : aisleArticlesJpaController.findAisleArticlesEntities()) try {
-            aisleArticlesJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(ClientArticles aa : clientArticlesJpaController.findClientArticlesEntities()) try {
-            clientArticlesJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }         
-        for(ClientArticlesReturn aa : clientArticlesReturnJpaController.findClientArticlesReturnEntities()) try {
-            clientArticlesReturnJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(CommandedArticles aa : commandedArticlesJpaController.findCommandedArticlesEntities()) try {
-            commandedArticlesJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(TransactionArticles aa : transactionArticlesJpaController.findTransactionArticlesEntities()) try {
-            transactionArticlesJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(WarehouseArticles aa : warehouseArticlesJpaController.findWarehouseArticlesEntities()) try {
-            warehouseArticlesJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        
-        
-        for(RetailerCommands aa : retailerCommandsJpaController.findRetailerCommandsEntities()) try {
-            retailerCommandsJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(SessionTransactions aa : sessionTransactionsJpaController.findSessionTransactionsEntities()) try {
-            sessionTransactionsJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        
-        for(Cashier aa : cashierJpaController.findCashierEntities()) try {
-            cashierJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }    
-        for(Retailer aa : retailerJpaController.findRetailerEntities()) try {
-            try {
-                retailerJpaController.destroy(aa.getId());
-            } catch (IllegalOrphanException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(Employee aa : employeeJpaController.findEmployeeEntities()) try {
-            try {
-                employeeJpaController.destroy(aa.getId());
-            } catch (IllegalOrphanException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(Command aa : commandJpaController.findCommandEntities()) try {
-            try {
-                commandJpaController.destroy(aa.getId());
-            } catch (IllegalOrphanException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(Payment aa : paymentJpaController.findPaymentEntities()) try {
-            paymentJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(Transaction aa : transactionJpaController.findTransactionEntities()) try {
-            transactionJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalOrphanException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(Session aa : sessionJpaController.findSessionEntities()) try {
-            sessionJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalOrphanException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(Key aa : keyJpaController.findKeyEntities()) try {
-            keyJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(CashRegister aa : cashRegisterJpaController.findCashRegisterEntities()) try {
-            try {
-                cashRegisterJpaController.destroy(aa.getId());
-            } catch (IllegalOrphanException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(Client aa : clientJpaController.findClientEntities()) try {
-            try {
-                clientJpaController.destroy(aa.getId());
-            } catch (IllegalOrphanException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(Article aa : articleJpaController.findArticleEntities()) try {
-            articleJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException | IllegalOrphanException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }        
-        for(Provider aa : providerJpaController.findProviderEntities()) try {
-            providerJpaController.destroy(aa.getId());
-            } catch (NonexistentEntityException | IllegalOrphanException ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        AisleArticlesJpaController.getController().reloveAll();
+        ClientArticlesJpaController.getController().reloveAll();
+        ClientArticlesReturnJpaController.getController().reloveAll();
+        CommandedArticlesJpaController.getController().reloveAll();
+        TransactionArticlesJpaController.getController().reloveAll();
+        WarehouseArticlesJpaController.getController().reloveAll();
+        RetailerCommandsJpaController.getController().reloveAll();
+        CashierJpaController.getController().reloveAll();
+        RetailerJpaController.getController().reloveAll();
+        EmployeeJpaController.getController().reloveAll();
+        CommandJpaController.getController().reloveAll();
+        PaymentJpaController.getController().reloveAll();
+        SessionTransactionsJpaController.getController().reloveAll();
+        TransactionJpaController.getController().reloveAll();
+        SessionJpaController.getController().reloveAll();
+        KeyJpaController.getController().reloveAll();
+        CashRegisterJpaController.getController().reloveAll();
+        ClientJpaController.getController().reloveAll();
+        ArticleJpaController.getController().reloveAll();
+        ProviderJpaController.getController().reloveAll();
     }
     
     private void initArticle()
@@ -314,7 +182,7 @@ AisleArticlesJpaController aisleArticlesJpaController = AisleArticlesJpaControll
         
         for(Entry<Article, Integer> article : articles.entrySet())
         {
-            //this.aClientHelperRefund.addArticle(article.getKey(), 2, false);
+            this.aClientHelperRefund.addArticle(article.getKey(), 2, false);
         }
         
         this.aCashierLoginView = new CashierLoginView();
@@ -347,6 +215,9 @@ AisleArticlesJpaController aisleArticlesJpaController = AisleArticlesJpaControll
         this.aRetailerView.addController(this.aControllerRetailer,this.aControllerRetailer);
         
         this.aRetailerHelper.addObserver(this.aRetailerView);
+        
+        this.aControllerCashier.addObserver(this.aControllerRetailer);
+        this.aControllerRetailer.addObserver(this.aControllerCashier);
     }
         
     private void startUp()

@@ -27,6 +27,7 @@ import javax.persistence.Table;
 @Table(name = "payment")
 @NamedQueries({
     @NamedQuery(name = "Payment.findAll", query = "SELECT p FROM Payment p"),
+    @NamedQuery(name = "Payment.removeAll", query = "DELETE FROM Payment p"),
     @NamedQuery(name = "Payment.findById", query = "SELECT p FROM Payment p WHERE p.id = :id"),
     @NamedQuery(name = "Payment.findByType", query = "SELECT p FROM Payment p WHERE p.type = :type"),
     @NamedQuery(name = "Payment.findByValue", query = "SELECT p FROM Payment p WHERE p.value = :value")})

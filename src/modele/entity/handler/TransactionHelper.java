@@ -110,6 +110,9 @@ public class TransactionHelper {
             Logger.getLogger(TransactionHelper.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
+        
+        aTransaction = null;
+        
         return true;
     }
     

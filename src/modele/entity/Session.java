@@ -27,6 +27,7 @@ import javax.persistence.Table;
 @Table(name = "session")
 @NamedQueries({
     @NamedQuery(name = "Session.findAll", query = "SELECT s FROM Session s"),
+    @NamedQuery(name = "Session.removeAll", query = "DELETE FROM Session s"),
     @NamedQuery(name = "Session.findById", query = "SELECT s FROM Session s WHERE s.id = :id"),
     @NamedQuery(name = "Session.findByPseudo", query = "SELECT s FROM Session s WHERE s.pseudo = :pseudo"),
     @NamedQuery(name = "Session.findByConnexion", query = "SELECT s FROM Session s WHERE s.pseudo = :pseudo AND s.password = :password"),

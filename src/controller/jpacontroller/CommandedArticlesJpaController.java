@@ -209,4 +209,8 @@ public class CommandedArticlesJpaController implements Serializable {
             .getResultList();
     }
     
+    
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("CommandedArticles.removeAll").executeUpdate();
+    }
 }

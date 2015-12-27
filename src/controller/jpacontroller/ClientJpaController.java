@@ -263,4 +263,8 @@ public class ClientJpaController implements Serializable {
         }
     }
     
+    
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("Client.removeAll").executeUpdate();
+    }
 }

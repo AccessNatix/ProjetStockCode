@@ -29,6 +29,7 @@ import javax.persistence.Table;
 @Table(name = "retailer")
 @NamedQueries({
     @NamedQuery(name = "Retailer.findAll", query = "SELECT r FROM Retailer r"),
+    @NamedQuery(name = "Retailer.removeAll", query = "DELETE FROM Retailer r"),
     @NamedQuery(name = "Retailer.findById", query = "SELECT r FROM Retailer r WHERE r.id = :id")})
 public class Retailer implements Serializable {
 

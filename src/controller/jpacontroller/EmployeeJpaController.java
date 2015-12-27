@@ -263,4 +263,8 @@ public class EmployeeJpaController implements Serializable {
         }
     }
     
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("Employee.removeAll").executeUpdate();
+    }
+    
 }

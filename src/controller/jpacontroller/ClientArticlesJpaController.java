@@ -219,4 +219,14 @@ public class ClientArticlesJpaController implements Serializable {
         return l.get(0);
     }
     
+    public void removeByClientId(int clientId){
+        getEntityManager().createNamedQuery("ClientArticles.removeByClientId")
+            .setParameter("clientId", clientId)
+            .executeUpdate();
+    }
+    
+    
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("ClientArticles.removeAll").executeUpdate();
+    }
 }

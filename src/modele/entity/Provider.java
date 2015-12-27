@@ -27,6 +27,7 @@ import javax.persistence.Table;
 @Table(name = "provider")
 @NamedQueries({
     @NamedQuery(name = "Provider.findAll", query = "SELECT p FROM Provider p"),
+    @NamedQuery(name = "Provider.removeAll", query = "DELETE FROM Provider p"),
     @NamedQuery(name = "Provider.findById", query = "SELECT p FROM Provider p WHERE p.id = :id"),
     @NamedQuery(name = "Provider.findByName", query = "SELECT p FROM Provider p WHERE p.name = :name"),
     @NamedQuery(name = "Provider.findByPhone", query = "SELECT p FROM Provider p WHERE p.phone = :phone"),

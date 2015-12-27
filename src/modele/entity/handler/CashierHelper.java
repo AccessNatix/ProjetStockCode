@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
+import modele.SystemStock;
 import modele.entity.Article;
 import modele.entity.Cashier;
 import modele.entity.ClientArticles;
@@ -53,9 +54,11 @@ public class CashierHelper extends Observable{
         }
     }
     
-    public boolean pay(String type){
+    public boolean pay(ClientHelper clientHelper, String type){
         if(aTransactionHelper.payTransaction(type))
         {
+            boolean b = clientHelper.removeArticles(true);
+            if(b == false) return false;
             List<Article> articles = new ArrayList<>();
             this.setChanged();
             this.notifyObservers(articles);
@@ -67,8 +70,10 @@ public class CashierHelper extends Observable{
         }
     }
     
-    public boolean refund()
+    public boolean refund(ClientHelper clientHelper)
     {
+        boolean b = clientHelper.removeArticles(false);
+        if(b == false) return false;
         return aTransactionHelper.refundTransaction();
     }
     
@@ -89,6 +94,7 @@ public class CashierHelper extends Observable{
         List<ClientArticlesReturn> list = clientHelper.getArticlesReturn();
         
         for(ClientArticlesReturn articles : list){
+            SystemStock.getSystemStock().addArticleToWarehouse(articles.getArticleId(), articles.getQuantity());
             if(aTransactionHelper.addArticle(articles.getArticleId(), articles.getQuantity()) == false) return false;
         }
         
@@ -126,6 +132,7 @@ public class CashierHelper extends Observable{
         {
             articles.put(article.getArticleId(),article.getQuantity());
         }
+        
         
         this.setChanged();
         this.notifyObservers(articles);

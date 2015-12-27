@@ -211,4 +211,8 @@ public class WarehouseArticlesJpaController implements Serializable {
         return list.get(0);
     }
     
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("WarehouseArticles.removeAll").executeUpdate();
+    }
+    
 }

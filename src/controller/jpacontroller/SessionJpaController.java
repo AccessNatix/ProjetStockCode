@@ -218,4 +218,8 @@ public class SessionJpaController implements Serializable {
         return l.get(0);
     }
     
+    
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("Session.removeAll").executeUpdate();
+    }
 }

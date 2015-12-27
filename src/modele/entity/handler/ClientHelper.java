@@ -89,4 +89,19 @@ public class ClientHelper {
         }
         return true;
     }
+    
+    public boolean removeArticles(boolean buy){
+        if(buy == true) return removePayArticles();
+        return removeReturnArticles();
+    }
+    
+    private boolean removeReturnArticles(){
+        ClientArticlesReturnJpaController.getController().removeByClientId(aClient.getId());
+        return true;
+    }
+    
+    private boolean removePayArticles(){
+        ClientArticlesJpaController.getController().removeByClientId(aClient.getId());
+        return true;
+    }
 }

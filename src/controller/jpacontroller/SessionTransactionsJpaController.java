@@ -219,4 +219,8 @@ public class SessionTransactionsJpaController implements Serializable {
         return l.get(0);
     }
     
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("SessionTransactions.removeAll").executeUpdate();
+    }
+    
 }

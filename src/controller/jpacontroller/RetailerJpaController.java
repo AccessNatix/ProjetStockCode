@@ -238,4 +238,8 @@ public class RetailerJpaController implements Serializable {
         }
     }
     
+    public void reloveAll(){
+        getEntityManager().createNamedQuery("Retailer.removeAll").executeUpdate();
+    }
+    
 }
