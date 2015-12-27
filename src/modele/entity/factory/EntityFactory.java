@@ -10,6 +10,7 @@ import controller.jpacontroller.ArticleJpaController;
 import controller.jpacontroller.CashRegisterJpaController;
 import controller.jpacontroller.CashierJpaController;
 import controller.jpacontroller.ClientArticlesJpaController;
+import controller.jpacontroller.ClientArticlesReturnJpaController;
 import controller.jpacontroller.ClientJpaController;
 import controller.jpacontroller.CommandJpaController;
 import controller.jpacontroller.CommandedArticlesJpaController;
@@ -36,6 +37,7 @@ import modele.entity.CashRegister;
 import modele.entity.Cashier;
 import modele.entity.Client;
 import modele.entity.ClientArticles;
+import modele.entity.ClientArticlesReturn;
 import modele.entity.Command;
 import modele.entity.CommandedArticles;
 import modele.entity.Employee;
@@ -147,6 +149,20 @@ public class EntityFactory {
             ClientArticlesJpaController.getController().create(clientArticle);
             
             t = (T) clientArticle;
+        }
+        else if(t.getClass() == ClientArticlesReturn.class){
+            Article article = (Article) attributes.get("article");
+            Client client = (Client) attributes.get("client");
+            int quantity = (Integer) attributes.get("quantity");
+           
+            ClientArticlesReturn clientArticlesReturn = new ClientArticlesReturn();
+            clientArticlesReturn.setArticleId(article);
+            clientArticlesReturn.setClientId(client);
+            clientArticlesReturn.setQuantity(quantity);
+
+            ClientArticlesReturnJpaController.getController().create(clientArticlesReturn);
+            
+            t = (T) clientArticlesReturn;
         }
         else if(t.getClass() == Command.class){
             Provider provider = (Provider) attributes.get("provider");

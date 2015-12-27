@@ -538,8 +538,13 @@ public class CashierView extends javax.swing.JFrame implements Observer{
     public void update(Observable o, Object o1) {
         
         if(o1 instanceof List)
-        {
+        {            
             List<Article> listArticle = (List<Article>) o1;
+            
+            if(listArticle.size() == 0)
+            {
+                this.cleanInterface();
+            }
             
             double total = 0.0;
             

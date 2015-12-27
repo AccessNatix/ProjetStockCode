@@ -7,9 +7,9 @@
 -- Version du serveur: 5.5.44-0ubuntu0.14.04.1
 -- Version de PHP: 5.5.9-1ubuntu4.13
 
-DROP DATABASE IF EXISTS `stock`;
-CREATE DATABASE `stock`;
-USE `stock`;
+DROP DATABASE IF EXISTS `INF-5201C`;
+CREATE DATABASE `INF-5201C`;
+USE `INF-5201C`;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+01:00";
@@ -54,6 +54,17 @@ CREATE TABLE IF NOT EXISTS `clientArticles` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+CREATE TABLE IF NOT EXISTS `clientArticlesReturn` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `client_id` int(10) unsigned NOT NULL,
+  `article_id` int(10) unsigned NOT NULL,
+  `quantity` int(10) unsigned NOT NULL,
+  UNIQUE (`client_id`,`article_id`),
+  FOREIGN KEY (`client_id`) REFERENCES `client`(`id`),
+  FOREIGN KEY (`article_id`) REFERENCES `article`(`id`),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 CREATE TABLE IF NOT EXISTS `employee` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `firstname` varchar(45) NOT NULL,
@@ -88,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `cashRegister` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-CREATE TABLE IF NOT EXISTS `key` (
+CREATE TABLE IF NOT EXISTS `keyy` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cashRegister_id` int(10) unsigned NOT NULL,
   FOREIGN KEY (`cashRegister_id`) REFERENCES `cashRegister`(`id`),

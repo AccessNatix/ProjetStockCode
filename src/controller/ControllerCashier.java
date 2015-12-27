@@ -70,7 +70,7 @@ public class ControllerCashier implements ActionListener, ChangeListener{
      */
     public void scanPaye()
     {
-        this.aCashierHandler.addArticles(this.aClientHelper);
+        this.aCashierHandler.addArticles(this.aClientHelper, true);
     }
     
     /**
@@ -78,7 +78,7 @@ public class ControllerCashier implements ActionListener, ChangeListener{
      */
     public void scanRefund()
     {
-        this.aCashierHandler.addArticles(this.aClientHelper);
+        this.aCashierHandler.addArticles(this.aClientHelper, false);
     }    
 
     public void cancelTransaction()

@@ -248,19 +248,20 @@ public class Application {
                 Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
+    
     private void initArticle()
     {
         Provider providerFirst = ObjectFactory.createProvider("adress", "jeanpaul", "0888", "92000");
         Provider providerSecond = ObjectFactory.createProvider("adress", "pierre", "082", "23000");
         
-        Article chaussure = ObjectFactory.createArticle(providerFirst, "barcode", "type", "chaussure", new BigDecimal(10.4), 100, 30);
+        Article chaussure = ObjectFactory.createArticle(providerFirst, "barcode", "type", "chaussure", new BigDecimal(10.4), 60, 70);
         Article lait = ObjectFactory.createArticle(providerSecond, "barcode", "type", "lait", new BigDecimal(3.0), 50, 10);
         Article chocolat = ObjectFactory.createArticle(providerSecond, "barcode", "type", "chocolat", new BigDecimal(4.0), 30, 5);
     
         /**
          * Ajout des articles à l'entrepot
          */
-        SystemStock.getSystemStock().addArticleToWarehouse(chaussure, 100);
+        SystemStock.getSystemStock().addArticleToWarehouse(chaussure, 60);
         SystemStock.getSystemStock().addArticleToWarehouse(lait, 50);
         SystemStock.getSystemStock().addArticleToWarehouse(chocolat, 30);
         
@@ -296,7 +297,7 @@ public class Application {
         
         for(Entry<Article, Integer> article : articles.entrySet())
         {
-            this.aClientHelper.addArticle(article.getKey(), 1);
+            this.aClientHelper.addArticle(article.getKey(), 1, true);
         }
         
         this.aCashierLoginView = new CashierLoginView();

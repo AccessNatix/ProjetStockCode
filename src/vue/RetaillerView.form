@@ -211,10 +211,10 @@
                                                   <Component id="jLabel5" alignment="1" min="-2" max="-2" attributes="0"/>
                                               </Group>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="stockname" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="quantitytocommand" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="fournisseurcombo" min="-2" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                  <Component id="stockname" max="32767" attributes="0"/>
+                                                  <Component id="providerInput" max="32767" attributes="0"/>
+                                                  <Component id="quantitytocommand" alignment="0" max="32767" attributes="0"/>
                                               </Group>
                                               <EmptySpace max="32767" attributes="0"/>
                                           </Group>
@@ -257,9 +257,9 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="fournisseurcombo" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="providerInput" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                               <Component id="command" min="-2" pref="54" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -267,7 +267,7 @@
                               <Component id="jButton3" min="-2" pref="59" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="14" max="32767" attributes="0"/>
+                      <EmptySpace pref="16" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -361,20 +361,13 @@
                 <Property name="text" type="java.lang.String" value="fournisseur:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="fournisseurcombo">
+            <Component class="javax.swing.JLabel" name="providerInput">
               <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
-                    <StringItem index="0" value="Item 1"/>
-                    <StringItem index="1" value="Item 2"/>
-                    <StringItem index="2" value="Item 3"/>
-                    <StringItem index="3" value="Item 4"/>
-                  </StringArray>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Ubuntu" size="18" style="0"/>
                 </Property>
+                <Property name="text" type="java.lang.String" value="None"/>
               </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
@@ -407,7 +400,7 @@
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
-                                      <Component id="jButton5" min="-2" pref="247" max="-2" attributes="0"/>
+                                      <Component id="update" min="-2" pref="247" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="95" max="-2" attributes="0"/>
                                       <Component id="jButton4" min="-2" pref="277" max="-2" attributes="0"/>
                                   </Group>
@@ -430,7 +423,7 @@
                       <Component id="jScrollPane6" min="-2" pref="317" max="-2" attributes="0"/>
                       <EmptySpace pref="75" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButton5" alignment="3" min="-2" pref="64" max="-2" attributes="0"/>
+                          <Component id="update" alignment="3" min="-2" pref="64" max="-2" attributes="0"/>
                           <Component id="jButton4" alignment="3" min="-2" pref="64" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
@@ -457,7 +450,7 @@
                 <Property name="text" type="java.lang.String" value="Imprimer"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton5">
+            <Component class="javax.swing.JButton" name="update">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Ubuntu" size="24" style="0"/>

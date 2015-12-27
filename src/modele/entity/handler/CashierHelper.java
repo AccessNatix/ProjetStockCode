@@ -11,6 +11,7 @@ import java.util.Observable;
 import modele.entity.Article;
 import modele.entity.Cashier;
 import modele.entity.ClientArticles;
+import modele.entity.ClientArticlesReturn;
 import modele.entity.Key;
 import modele.entity.TransactionArticles;
 
@@ -40,7 +41,82 @@ public class CashierHelper extends Observable{
         return true;
     }
     
-    public boolean addArticles(ClientHelper clientHelper){
+    public boolean addArticles(ClientHelper clientHelper, boolean bought){
+        if(bought == true) return addArticleBought(clientHelper);
+        return addArticleReturned(clientHelper);
+    }
+    
+    public boolean connect(String pseudo, String password){
+        if(this.aCashRegisterHelper.connect(pseudo, password))
+        {
+            return true;
+        }
+        else
+        {
+            this.setChanged();
+            this.notifyObservers("Accès refusé");
+            return false;
+        }
+    }
+    
+    public boolean pay(String type){
+        if(aTransactionHelper.payTransaction(type))
+        {
+            List<Article> articles = new ArrayList<>();
+            this.setChanged();
+            this.notifyObservers(articles);
+            System.err.println("Casse toi !");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    public boolean refund()
+    {
+        return aTransactionHelper.refundTransaction();
+    }
+    
+    public boolean open(Key key){
+        return aCashRegisterHelper.open(key);
+    }
+    
+    public boolean cancelTranslation(){
+        aCashRegisterHelper.close();
+        return aTransactionHelper.cancelTransaction();
+    }
+    
+    public List<TransactionArticles> getTransactionArticles(){ // print
+        return aTransactionHelper.getArticles();
+    }
+    
+    private boolean addArticleReturned(ClientHelper clientHelper){
+        List<ClientArticlesReturn> list = clientHelper.getArticlesReturn();
+        
+        for(ClientArticlesReturn articles : list){
+            if(aTransactionHelper.addArticle(articles.getArticleId(), articles.getQuantity()) == false) return false;
+        }
+        
+        List<TransactionArticles> transArticles = aTransactionHelper.getArticles();
+        
+        /**
+         * On récupéere l'ensemble des articles
+         */
+        List<Article> articles = new ArrayList<>();
+        for(TransactionArticles article : transArticles)
+        {
+            articles.add(article.getArticleId());
+        }
+        
+        this.setChanged();
+        this.notifyObservers(articles);
+        
+        return true;
+    }
+    
+    private boolean addArticleBought(ClientHelper clientHelper){
         List<ClientArticles> list = clientHelper.getArticles();
         
         for(ClientArticles articles : list){
@@ -63,41 +139,5 @@ public class CashierHelper extends Observable{
         
         return true;
     }
-    
-    public boolean connect(String pseudo, String password){
-        if(this.aCashRegisterHelper.connect(pseudo, password))
-        {
-            return true;
-        }
-        else
-        {
-            this.setChanged();
-            this.notifyObservers("Accès refusé");
-            return false;
-        }
-    }
-    
-    public boolean pay(String type){
-        return aTransactionHelper.payTransaction(type);
-    }
-    
-    public boolean refund()
-    {
-        return aTransactionHelper.refundTransaction();
-    }
-    
-    public boolean open(Key key){
-        return aCashRegisterHelper.open(key);
-    }
-    
-    public boolean cancelTranslation(){
-        aCashRegisterHelper.close();
-        return aTransactionHelper.cancelTransaction();
-    }
-    
-    public List<TransactionArticles> getTransactionArticles(){ // print
-        return aTransactionHelper.getArticles();
-    }
-    
     
 }

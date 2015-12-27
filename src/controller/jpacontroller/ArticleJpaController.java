@@ -24,6 +24,7 @@ import javax.persistence.EntityManagerFactory;
 import modele.entity.Article;
 import modele.entity.CommandedArticles;
 import modele.entity.TransactionArticles;
+import modele.entity.ClientArticlesReturn;
 
 /**
  *
@@ -57,6 +58,9 @@ public class ArticleJpaController implements Serializable {
         }
         if (article.getTransactionArticlesCollection() == null) {
             article.setTransactionArticlesCollection(new ArrayList<TransactionArticles>());
+        }
+        if (article.getClientArticlesReturnCollection() == null) {
+            article.setClientArticlesReturnCollection(new ArrayList<ClientArticlesReturn>());
         }
         EntityManager em = null;
         try {
@@ -95,6 +99,12 @@ public class ArticleJpaController implements Serializable {
                 attachedTransactionArticlesCollection.add(transactionArticlesCollectionTransactionArticlesToAttach);
             }
             article.setTransactionArticlesCollection(attachedTransactionArticlesCollection);
+            Collection<ClientArticlesReturn> attachedClientArticlesReturnCollection = new ArrayList<ClientArticlesReturn>();
+            for (ClientArticlesReturn clientArticlesReturnCollectionClientArticlesReturnToAttach : article.getClientArticlesReturnCollection()) {
+                clientArticlesReturnCollectionClientArticlesReturnToAttach = em.getReference(clientArticlesReturnCollectionClientArticlesReturnToAttach.getClass(), clientArticlesReturnCollectionClientArticlesReturnToAttach.getId());
+                attachedClientArticlesReturnCollection.add(clientArticlesReturnCollectionClientArticlesReturnToAttach);
+            }
+            article.setClientArticlesReturnCollection(attachedClientArticlesReturnCollection);
             em.persist(article);
             if (providerId != null) {
                 providerId.getArticleCollection().add(article);
@@ -145,6 +155,15 @@ public class ArticleJpaController implements Serializable {
                     oldArticleIdOfTransactionArticlesCollectionTransactionArticles = em.merge(oldArticleIdOfTransactionArticlesCollectionTransactionArticles);
                 }
             }
+            for (ClientArticlesReturn clientArticlesReturnCollectionClientArticlesReturn : article.getClientArticlesReturnCollection()) {
+                Article oldArticleIdOfClientArticlesReturnCollectionClientArticlesReturn = clientArticlesReturnCollectionClientArticlesReturn.getArticleId();
+                clientArticlesReturnCollectionClientArticlesReturn.setArticleId(article);
+                clientArticlesReturnCollectionClientArticlesReturn = em.merge(clientArticlesReturnCollectionClientArticlesReturn);
+                if (oldArticleIdOfClientArticlesReturnCollectionClientArticlesReturn != null) {
+                    oldArticleIdOfClientArticlesReturnCollectionClientArticlesReturn.getClientArticlesReturnCollection().remove(clientArticlesReturnCollectionClientArticlesReturn);
+                    oldArticleIdOfClientArticlesReturnCollectionClientArticlesReturn = em.merge(oldArticleIdOfClientArticlesReturnCollectionClientArticlesReturn);
+                }
+            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -171,6 +190,8 @@ public class ArticleJpaController implements Serializable {
             Collection<CommandedArticles> commandedArticlesCollectionNew = article.getCommandedArticlesCollection();
             Collection<TransactionArticles> transactionArticlesCollectionOld = persistentArticle.getTransactionArticlesCollection();
             Collection<TransactionArticles> transactionArticlesCollectionNew = article.getTransactionArticlesCollection();
+            Collection<ClientArticlesReturn> clientArticlesReturnCollectionOld = persistentArticle.getClientArticlesReturnCollection();
+            Collection<ClientArticlesReturn> clientArticlesReturnCollectionNew = article.getClientArticlesReturnCollection();
             List<String> illegalOrphanMessages = null;
             if (warehouseArticlesOld != null && !warehouseArticlesOld.equals(warehouseArticlesNew)) {
                 if (illegalOrphanMessages == null) {
@@ -206,6 +227,14 @@ public class ArticleJpaController implements Serializable {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
                     illegalOrphanMessages.add("You must retain TransactionArticles " + transactionArticlesCollectionOldTransactionArticles + " since its articleId field is not nullable.");
+                }
+            }
+            for (ClientArticlesReturn clientArticlesReturnCollectionOldClientArticlesReturn : clientArticlesReturnCollectionOld) {
+                if (!clientArticlesReturnCollectionNew.contains(clientArticlesReturnCollectionOldClientArticlesReturn)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain ClientArticlesReturn " + clientArticlesReturnCollectionOldClientArticlesReturn + " since its articleId field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -244,6 +273,13 @@ public class ArticleJpaController implements Serializable {
             }
             transactionArticlesCollectionNew = attachedTransactionArticlesCollectionNew;
             article.setTransactionArticlesCollection(transactionArticlesCollectionNew);
+            Collection<ClientArticlesReturn> attachedClientArticlesReturnCollectionNew = new ArrayList<ClientArticlesReturn>();
+            for (ClientArticlesReturn clientArticlesReturnCollectionNewClientArticlesReturnToAttach : clientArticlesReturnCollectionNew) {
+                clientArticlesReturnCollectionNewClientArticlesReturnToAttach = em.getReference(clientArticlesReturnCollectionNewClientArticlesReturnToAttach.getClass(), clientArticlesReturnCollectionNewClientArticlesReturnToAttach.getId());
+                attachedClientArticlesReturnCollectionNew.add(clientArticlesReturnCollectionNewClientArticlesReturnToAttach);
+            }
+            clientArticlesReturnCollectionNew = attachedClientArticlesReturnCollectionNew;
+            article.setClientArticlesReturnCollection(clientArticlesReturnCollectionNew);
             article = em.merge(article);
             if (providerIdOld != null && !providerIdOld.equals(providerIdNew)) {
                 providerIdOld.getArticleCollection().remove(article);
@@ -301,6 +337,17 @@ public class ArticleJpaController implements Serializable {
                     if (oldArticleIdOfTransactionArticlesCollectionNewTransactionArticles != null && !oldArticleIdOfTransactionArticlesCollectionNewTransactionArticles.equals(article)) {
                         oldArticleIdOfTransactionArticlesCollectionNewTransactionArticles.getTransactionArticlesCollection().remove(transactionArticlesCollectionNewTransactionArticles);
                         oldArticleIdOfTransactionArticlesCollectionNewTransactionArticles = em.merge(oldArticleIdOfTransactionArticlesCollectionNewTransactionArticles);
+                    }
+                }
+            }
+            for (ClientArticlesReturn clientArticlesReturnCollectionNewClientArticlesReturn : clientArticlesReturnCollectionNew) {
+                if (!clientArticlesReturnCollectionOld.contains(clientArticlesReturnCollectionNewClientArticlesReturn)) {
+                    Article oldArticleIdOfClientArticlesReturnCollectionNewClientArticlesReturn = clientArticlesReturnCollectionNewClientArticlesReturn.getArticleId();
+                    clientArticlesReturnCollectionNewClientArticlesReturn.setArticleId(article);
+                    clientArticlesReturnCollectionNewClientArticlesReturn = em.merge(clientArticlesReturnCollectionNewClientArticlesReturn);
+                    if (oldArticleIdOfClientArticlesReturnCollectionNewClientArticlesReturn != null && !oldArticleIdOfClientArticlesReturnCollectionNewClientArticlesReturn.equals(article)) {
+                        oldArticleIdOfClientArticlesReturnCollectionNewClientArticlesReturn.getClientArticlesReturnCollection().remove(clientArticlesReturnCollectionNewClientArticlesReturn);
+                        oldArticleIdOfClientArticlesReturnCollectionNewClientArticlesReturn = em.merge(oldArticleIdOfClientArticlesReturnCollectionNewClientArticlesReturn);
                     }
                 }
             }
@@ -369,6 +416,13 @@ public class ArticleJpaController implements Serializable {
                 }
                 illegalOrphanMessages.add("This Article (" + article + ") cannot be destroyed since the TransactionArticles " + transactionArticlesCollectionOrphanCheckTransactionArticles + " in its transactionArticlesCollection field has a non-nullable articleId field.");
             }
+            Collection<ClientArticlesReturn> clientArticlesReturnCollectionOrphanCheck = article.getClientArticlesReturnCollection();
+            for (ClientArticlesReturn clientArticlesReturnCollectionOrphanCheckClientArticlesReturn : clientArticlesReturnCollectionOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Article (" + article + ") cannot be destroyed since the ClientArticlesReturn " + clientArticlesReturnCollectionOrphanCheckClientArticlesReturn + " in its clientArticlesReturnCollection field has a non-nullable articleId field.");
+            }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
@@ -430,6 +484,14 @@ public class ArticleJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+    public Article findByName(String name){
+        List<Article> l = getEntityManager().createNamedQuery("Article.findByName")
+            .setParameter("name", name)
+            .getResultList();
+        if(l.isEmpty()) return null;
+        return l.get(0);
     }
     
 }

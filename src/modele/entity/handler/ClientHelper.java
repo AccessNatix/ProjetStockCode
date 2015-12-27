@@ -6,6 +6,7 @@
 package modele.entity.handler;
 
 import controller.jpacontroller.ClientArticlesJpaController;
+import controller.jpacontroller.ClientArticlesReturnJpaController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -14,6 +15,7 @@ import modele.SystemStock;
 import modele.entity.Article;
 import modele.entity.Client;
 import modele.entity.ClientArticles;
+import modele.entity.ClientArticlesReturn;
 import modele.entity.factory.EntityFactory;
 
 /**
@@ -27,11 +29,24 @@ public class ClientHelper {
         this.aClient = client;
     }
     
-    public boolean addArticle(Article article, int quantity){
+    public boolean addArticle(Article article, int quantity, boolean buy){
+        if(buy == true) return addArticleBuy(article, quantity);
+        return addArticleReturn(article, quantity);
+    }
+    
+    public List<ClientArticles> getArticles(){
+        return ClientArticlesJpaController.getController().findByClientId(aClient.getId());
+    }
+    
+    public List<ClientArticlesReturn> getArticlesReturn(){
+        return ClientArticlesReturnJpaController.getController().findByClientId(aClient.getId());
+    }
+    
+    private boolean addArticleBuy(Article article, int quantity){
         SystemStock systemStock = SystemStock.getSystemStock();
         boolean b = systemStock.removeArticleFromAisle(article, quantity);
         if(b == false) return false;
-        
+
         ClientArticlesJpaController clientArticlesJpaController = ClientArticlesJpaController.getController();
         ClientArticles clientArticle = clientArticlesJpaController.findByIds(aClient.getId(), article.getId());
         if(clientArticle == null){
@@ -54,7 +69,26 @@ public class ClientHelper {
         return true;
     }
     
-    public List<ClientArticles> getArticles(){
-        return ClientArticlesJpaController.getController().findByClientId(aClient.getId());
+    private boolean addArticleReturn(Article article, int quantity){
+        ClientArticlesReturnJpaController clientArticlesReturnJpaController = ClientArticlesReturnJpaController.getController();
+        ClientArticlesReturn clientArticlesReturn = clientArticlesReturnJpaController.findByIds(aClient.getId(), article.getId());
+        if(clientArticlesReturn == null){
+            HashMap<String,Object> map = new HashMap<>();
+            map.put("article", article);
+            map.put("client", aClient);
+            map.put("quantity", quantity);
+            clientArticlesReturn = EntityFactory.create(new ClientArticlesReturn(),map);
+            if(clientArticlesReturn == null) return false;
+        }
+        else{
+            clientArticlesReturn.setQuantity(clientArticlesReturn.getQuantity()+quantity);
+            try {
+                clientArticlesReturnJpaController.edit(clientArticlesReturn);
+            } catch (Exception ex) {
+                Logger.getLogger(ClientHelper.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
+        }
+        return true;
     }
 }

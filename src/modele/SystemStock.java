@@ -58,9 +58,9 @@ public class SystemStock {
             AisleArticles aisleArticle = aAisle.getArticleFromAisle(article);
             
             int warehouseStock = 0;
-            if(warehouseArticle != null) warehouseArticle.getQuantity();
+            if(warehouseArticle != null) warehouseStock = warehouseArticle.getQuantity();
             int aisleStock = 0;
-            if(aisleArticle != null) aisleArticle.getQuantity();
+            if(aisleArticle != null) aisleStock = aisleArticle.getQuantity();
             
             int totalStock = warehouseStock + aisleStock;
             
@@ -84,7 +84,7 @@ public class SystemStock {
             AisleArticles aisleArticle = aAisle.getArticleFromAisle(article);
 
             int aisleStock = 0;
-            if(aisleArticle != null) aisleArticle.getQuantity();
+            if(aisleArticle != null) aisleStock = aisleArticle.getQuantity();
             
             int totalStock = aisleStock;
             
@@ -103,9 +103,9 @@ public class SystemStock {
             AisleArticles aisleArticle = aAisle.getArticleFromAisle(article);
             
             int warehouseStock = 0;
-            if(warehouseArticle != null) warehouseArticle.getQuantity();
+            if(warehouseArticle != null) warehouseStock = warehouseArticle.getQuantity();
             int aisleStock = 0;
-            if(aisleArticle != null) aisleArticle.getQuantity();
+            if(aisleArticle != null) aisleStock = aisleArticle.getQuantity();
             
             int totalStock = warehouseStock + aisleStock;
             

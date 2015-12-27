@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import modele.SystemStock;
 import modele.entity.Article;
 import modele.entity.Payment;
 import modele.entity.Transaction;
@@ -128,6 +129,10 @@ public class TransactionHelper {
     
     public boolean refundTransaction()
     {
+        List<TransactionArticles> l = getArticles();
+        for(TransactionArticles articles : l){
+            SystemStock.getSystemStock().addArticleToWarehouse(articles.getArticleId(), articles.getQuantity());
+        }
         return true;
     }
     

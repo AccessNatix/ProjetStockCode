@@ -12,11 +12,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -43,8 +42,6 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
     private DefaultTableModel tableModelCommands;
     private DefaultTableModel tableModelProviders;    
     
-    private DefaultComboBoxModel comboBoxProvider;
-    
     /**
      * Creates new form RetaillerView
      */
@@ -64,14 +61,14 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
             new Object [][] {
             },
             new String [] 
-                {"Nom article","Quantité","Prix"}
+                {"Nom article","Quantité","Prix","Non du fournisseur"}
         );
         
         this.tableModelCommands = new DefaultTableModel(
             new Object [][] {
             },
             new String [] 
-                {"Nom article","Quantité"}        
+                {"Numéro commande","Nom article","Quantité","Non du fournisseur"}        
         );
         
         this.tableModelProviders = new DefaultTableModel(
@@ -86,15 +83,13 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
         this.commands.setModel(tableModelCommands);
         this.providerstable.setModel(tableModelProviders);
         
-        this.comboBoxProvider = new DefaultComboBoxModel();
-        this.fournisseurcombo.setModel(comboBoxProvider);
-        
         this.stockunderthre.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent event) {
                 if (stockunderthre.getSelectedRow() > -1) {
-                    stockname.setText((String)stockunderthre.getValueAt(stockunderthre.getSelectedRow(), 1));
+                    stockname.setText((String)stockunderthre.getValueAt(stockunderthre.getSelectedRow(), 0));
                     quantitytocommand.setText("0");
+                    providerInput.setText((String)stockunderthre.getValueAt(stockunderthre.getSelectedRow(), 3));
                 }
             }
         });
@@ -130,12 +125,12 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
         jScrollPane2 = new javax.swing.JScrollPane();
         stockunderthre = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
-        fournisseurcombo = new javax.swing.JComboBox<>();
+        providerInput = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
         jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        update = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         commands = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
@@ -256,7 +251,8 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
         jLabel5.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         jLabel5.setText("fournisseur:");
 
-        fournisseurcombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        providerInput.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        providerInput.setText("None");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -283,10 +279,10 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                                             .addComponent(jLabel4)
                                             .addComponent(jLabel5))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(stockname)
-                                            .addComponent(quantitytocommand, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(fournisseurcombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(stockname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(providerInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(quantitytocommand))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                         .addComponent(command, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -317,13 +313,13 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(fournisseurcombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(23, 23, 23)
+                            .addComponent(providerInput))
+                        .addGap(28, 28, 28)
                         .addComponent(command, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(68, 68, 68)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("affichage stock sous seuil", jPanel2);
@@ -334,8 +330,8 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
         jButton4.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
         jButton4.setText("Imprimer");
 
-        jButton5.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
-        jButton5.setText("Mise en stock");
+        update.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
+        update.setText("Mise en stock");
 
         commands.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -368,7 +364,7 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                                 .addComponent(jLabel7))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(92, 92, 92)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(update, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(95, 95, 95)
                                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -385,7 +381,7 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(update, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(61, 61, 61))
         );
@@ -514,11 +510,9 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton command;
     private javax.swing.JTable commands;
-    private javax.swing.JComboBox<String> fournisseurcombo;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -543,16 +537,23 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel providerInput;
     private javax.swing.JTable providerstable;
     private javax.swing.JTextField quantitytocommand;
     private javax.swing.JLabel stockname;
     private javax.swing.JTable stockunderthre;
     private javax.swing.JTable tablestock;
+    private javax.swing.JButton update;
     // End of variables declaration//GEN-END:variables
 
-    public JComboBox<String> getProvider()
+    public JTable getCommands()
     {
-        return this.fournisseurcombo;
+        return this.commands;
+    }
+    
+    public JLabel getProviderInput()
+    {
+        return this.providerInput;
     }
      
     public JLabel getArticleName()
@@ -565,10 +566,16 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
         return this.quantitytocommand;
     }
     
+    public JButton getUpdateButton()
+    {
+        return this.update;
+    }
+    
     public void addController(ChangeListener actionChange, ActionListener action)
     {
         this.jTabbedPane1.addChangeListener(actionChange);
-        this.command.addChangeListener(actionChange);
+        this.command.addActionListener(action);
+        this.update.addActionListener(action);
     }
     
     public JButton getCommandButton()
@@ -599,46 +606,43 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                 currentTab = TabbedPane.PROVIDER;
                 break;
         }
+    
+        System.err.println(o1.toString());
         
         if(o1 instanceof List)
         {   
-            for(int i = 0; i < this.tableModelCommands.getRowCount(); i++)
-            {
-                this.tableModelCommands.removeRow(i);                
-            }
-            
-            for(int i = 0; i < this.tableModelProviders.getRowCount(); i++)
-            {
-                this.tableModelProviders.removeRow(i);                
-            }
+            System.err.println("List");
             
             switch(currentTab)
             {
                 case COMMAND:
+                    if (tableModelCommands.getRowCount() > 0) {
+                        for (int i = tableModelCommands.getRowCount() - 1; i > -1; i--) {
+                            tableModelCommands.removeRow(i);
+                        }
+                    }
+                    
                     System.err.println("COMMAND");
                     List<CommandedArticles> commands = (List<CommandedArticles>) o1;
                     
                     for(CommandedArticles command : commands)
                     {
                         List<Object> row = new ArrayList<Object>();
+                        row.add(String.valueOf(command.getCommandId().getId()));
                         row.add(command.getArticleId().getName());
                         row.add(command.getQuantity());
+                        row.add(command.getArticleId().getProviderId().getName());
                         this.tableModelCommands.addRow(row.toArray());
                     }
                     
                     break;
-                case STOCKUNDER:
-                    System.err.println("STOCK");
-                    List<Provider> providers = (List<Provider>) o1;
-                    this.comboBoxProvider.removeAllElements();
-                    
-                    for(Provider provider: providers)
-                    {
-                        this.comboBoxProvider.addElement(provider.getName());
-                    }
-                    
-                    break;
                 case PROVIDER:
+                    if (tableModelProviders.getRowCount() > 0) {
+                        for (int i = tableModelProviders.getRowCount() - 1; i > -1; i--) {
+                            tableModelProviders.removeRow(i);
+                        }
+                    }
+
                     System.err.println("PROVIDER");
                     List<Provider> providersList = (List<Provider>) o1;
 
@@ -659,19 +663,17 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
         }
         else if(o1 instanceof HashMap)
         {
-            for(int i = 0; i < this.tableModelStock.getRowCount(); i++)
-            {
-                this.tableModelStock.removeRow(i);                
-            }
-            
-            for(int i = 0; i < this.tableModelUnderStock.getRowCount(); i++)
-            {
-                this.tableModelUnderStock.removeRow(i);                
-            }
+            System.err.println("HashMap");
             
             switch(currentTab)
             {
                 case STOCK:
+                    if (tableModelStock.getRowCount() > 0) {
+                        for (int i = tableModelStock.getRowCount() - 1; i > -1; i--) {
+                            tableModelStock.removeRow(i);
+                        }
+                    }
+                    
                     HashMap<Article, Integer> stocks = (HashMap<Article, Integer>) o1;
                     System.err.println("STOCK TRUE " + stocks.size());
                     
@@ -686,7 +688,15 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                     
                     break;
                 case STOCKUNDER:
+                    if (tableModelUnderStock.getRowCount() > 0) {
+                        for (int i = tableModelUnderStock.getRowCount() - 1; i > -1; i--) {
+                            tableModelUnderStock.removeRow(i);
+                        }
+                    }
+
+                    
                     HashMap<Article, Integer> stockUnder = (HashMap<Article, Integer>) o1;
+                    System.err.println("Size = " + stockUnder.size());
                     
                     for(Entry<Article,Integer> stock : stockUnder.entrySet())
                     {
@@ -694,9 +704,9 @@ public class RetaillerView extends javax.swing.JFrame implements Observer{
                         row.add(stock.getKey().getName());
                         row.add(String.valueOf(stock.getKey().getStock()));
                         row.add(String.valueOf(stock.getKey().getPrice().doubleValue()));
+                        row.add(stock.getKey().getProviderId().getName());
                         this.tableModelUnderStock.addRow(row.toArray());
                     }
-                    
                     break;
                 default:
                     System.err.println("default");

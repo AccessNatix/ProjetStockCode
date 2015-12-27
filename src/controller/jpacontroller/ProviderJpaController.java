@@ -263,4 +263,12 @@ public class ProviderJpaController implements Serializable {
         }
     }
     
+    public Provider findByName(String name){
+        List<Provider> l = getEntityManager().createNamedQuery("Provider.findByName")
+            .setParameter("name", name)
+            .getResultList();
+        if(l.isEmpty()) return null;
+        return l.get(0);
+    }
+    
 }

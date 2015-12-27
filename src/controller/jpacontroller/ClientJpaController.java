@@ -19,6 +19,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import modele.entity.Client;
+import modele.entity.ClientArticlesReturn;
 
 /**
  *
@@ -47,6 +48,9 @@ public class ClientJpaController implements Serializable {
         if (client.getClientArticlesCollection() == null) {
             client.setClientArticlesCollection(new ArrayList<ClientArticles>());
         }
+        if (client.getClientArticlesReturnCollection() == null) {
+            client.setClientArticlesReturnCollection(new ArrayList<ClientArticlesReturn>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -57,6 +61,12 @@ public class ClientJpaController implements Serializable {
                 attachedClientArticlesCollection.add(clientArticlesCollectionClientArticlesToAttach);
             }
             client.setClientArticlesCollection(attachedClientArticlesCollection);
+            Collection<ClientArticlesReturn> attachedClientArticlesReturnCollection = new ArrayList<ClientArticlesReturn>();
+            for (ClientArticlesReturn clientArticlesReturnCollectionClientArticlesReturnToAttach : client.getClientArticlesReturnCollection()) {
+                clientArticlesReturnCollectionClientArticlesReturnToAttach = em.getReference(clientArticlesReturnCollectionClientArticlesReturnToAttach.getClass(), clientArticlesReturnCollectionClientArticlesReturnToAttach.getId());
+                attachedClientArticlesReturnCollection.add(clientArticlesReturnCollectionClientArticlesReturnToAttach);
+            }
+            client.setClientArticlesReturnCollection(attachedClientArticlesReturnCollection);
             em.persist(client);
             for (ClientArticles clientArticlesCollectionClientArticles : client.getClientArticlesCollection()) {
                 Client oldClientIdOfClientArticlesCollectionClientArticles = clientArticlesCollectionClientArticles.getClientId();
@@ -65,6 +75,15 @@ public class ClientJpaController implements Serializable {
                 if (oldClientIdOfClientArticlesCollectionClientArticles != null) {
                     oldClientIdOfClientArticlesCollectionClientArticles.getClientArticlesCollection().remove(clientArticlesCollectionClientArticles);
                     oldClientIdOfClientArticlesCollectionClientArticles = em.merge(oldClientIdOfClientArticlesCollectionClientArticles);
+                }
+            }
+            for (ClientArticlesReturn clientArticlesReturnCollectionClientArticlesReturn : client.getClientArticlesReturnCollection()) {
+                Client oldClientIdOfClientArticlesReturnCollectionClientArticlesReturn = clientArticlesReturnCollectionClientArticlesReturn.getClientId();
+                clientArticlesReturnCollectionClientArticlesReturn.setClientId(client);
+                clientArticlesReturnCollectionClientArticlesReturn = em.merge(clientArticlesReturnCollectionClientArticlesReturn);
+                if (oldClientIdOfClientArticlesReturnCollectionClientArticlesReturn != null) {
+                    oldClientIdOfClientArticlesReturnCollectionClientArticlesReturn.getClientArticlesReturnCollection().remove(clientArticlesReturnCollectionClientArticlesReturn);
+                    oldClientIdOfClientArticlesReturnCollectionClientArticlesReturn = em.merge(oldClientIdOfClientArticlesReturnCollectionClientArticlesReturn);
                 }
             }
             em.getTransaction().commit();
@@ -83,6 +102,8 @@ public class ClientJpaController implements Serializable {
             Client persistentClient = em.find(Client.class, client.getId());
             Collection<ClientArticles> clientArticlesCollectionOld = persistentClient.getClientArticlesCollection();
             Collection<ClientArticles> clientArticlesCollectionNew = client.getClientArticlesCollection();
+            Collection<ClientArticlesReturn> clientArticlesReturnCollectionOld = persistentClient.getClientArticlesReturnCollection();
+            Collection<ClientArticlesReturn> clientArticlesReturnCollectionNew = client.getClientArticlesReturnCollection();
             List<String> illegalOrphanMessages = null;
             for (ClientArticles clientArticlesCollectionOldClientArticles : clientArticlesCollectionOld) {
                 if (!clientArticlesCollectionNew.contains(clientArticlesCollectionOldClientArticles)) {
@@ -90,6 +111,14 @@ public class ClientJpaController implements Serializable {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
                     illegalOrphanMessages.add("You must retain ClientArticles " + clientArticlesCollectionOldClientArticles + " since its clientId field is not nullable.");
+                }
+            }
+            for (ClientArticlesReturn clientArticlesReturnCollectionOldClientArticlesReturn : clientArticlesReturnCollectionOld) {
+                if (!clientArticlesReturnCollectionNew.contains(clientArticlesReturnCollectionOldClientArticlesReturn)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain ClientArticlesReturn " + clientArticlesReturnCollectionOldClientArticlesReturn + " since its clientId field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -102,6 +131,13 @@ public class ClientJpaController implements Serializable {
             }
             clientArticlesCollectionNew = attachedClientArticlesCollectionNew;
             client.setClientArticlesCollection(clientArticlesCollectionNew);
+            Collection<ClientArticlesReturn> attachedClientArticlesReturnCollectionNew = new ArrayList<ClientArticlesReturn>();
+            for (ClientArticlesReturn clientArticlesReturnCollectionNewClientArticlesReturnToAttach : clientArticlesReturnCollectionNew) {
+                clientArticlesReturnCollectionNewClientArticlesReturnToAttach = em.getReference(clientArticlesReturnCollectionNewClientArticlesReturnToAttach.getClass(), clientArticlesReturnCollectionNewClientArticlesReturnToAttach.getId());
+                attachedClientArticlesReturnCollectionNew.add(clientArticlesReturnCollectionNewClientArticlesReturnToAttach);
+            }
+            clientArticlesReturnCollectionNew = attachedClientArticlesReturnCollectionNew;
+            client.setClientArticlesReturnCollection(clientArticlesReturnCollectionNew);
             client = em.merge(client);
             for (ClientArticles clientArticlesCollectionNewClientArticles : clientArticlesCollectionNew) {
                 if (!clientArticlesCollectionOld.contains(clientArticlesCollectionNewClientArticles)) {
@@ -111,6 +147,17 @@ public class ClientJpaController implements Serializable {
                     if (oldClientIdOfClientArticlesCollectionNewClientArticles != null && !oldClientIdOfClientArticlesCollectionNewClientArticles.equals(client)) {
                         oldClientIdOfClientArticlesCollectionNewClientArticles.getClientArticlesCollection().remove(clientArticlesCollectionNewClientArticles);
                         oldClientIdOfClientArticlesCollectionNewClientArticles = em.merge(oldClientIdOfClientArticlesCollectionNewClientArticles);
+                    }
+                }
+            }
+            for (ClientArticlesReturn clientArticlesReturnCollectionNewClientArticlesReturn : clientArticlesReturnCollectionNew) {
+                if (!clientArticlesReturnCollectionOld.contains(clientArticlesReturnCollectionNewClientArticlesReturn)) {
+                    Client oldClientIdOfClientArticlesReturnCollectionNewClientArticlesReturn = clientArticlesReturnCollectionNewClientArticlesReturn.getClientId();
+                    clientArticlesReturnCollectionNewClientArticlesReturn.setClientId(client);
+                    clientArticlesReturnCollectionNewClientArticlesReturn = em.merge(clientArticlesReturnCollectionNewClientArticlesReturn);
+                    if (oldClientIdOfClientArticlesReturnCollectionNewClientArticlesReturn != null && !oldClientIdOfClientArticlesReturnCollectionNewClientArticlesReturn.equals(client)) {
+                        oldClientIdOfClientArticlesReturnCollectionNewClientArticlesReturn.getClientArticlesReturnCollection().remove(clientArticlesReturnCollectionNewClientArticlesReturn);
+                        oldClientIdOfClientArticlesReturnCollectionNewClientArticlesReturn = em.merge(oldClientIdOfClientArticlesReturnCollectionNewClientArticlesReturn);
                     }
                 }
             }
@@ -150,6 +197,13 @@ public class ClientJpaController implements Serializable {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
                 illegalOrphanMessages.add("This Client (" + client + ") cannot be destroyed since the ClientArticles " + clientArticlesCollectionOrphanCheckClientArticles + " in its clientArticlesCollection field has a non-nullable clientId field.");
+            }
+            Collection<ClientArticlesReturn> clientArticlesReturnCollectionOrphanCheck = client.getClientArticlesReturnCollection();
+            for (ClientArticlesReturn clientArticlesReturnCollectionOrphanCheckClientArticlesReturn : clientArticlesReturnCollectionOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Client (" + client + ") cannot be destroyed since the ClientArticlesReturn " + clientArticlesReturnCollectionOrphanCheckClientArticlesReturn + " in its clientArticlesReturnCollection field has a non-nullable clientId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

@@ -48,6 +48,7 @@ public class RetailerHelper extends Observable{
     public boolean handleCommand(Command command){
         List<CommandedArticles> list = CommandedArticlesJpaController.getController().findByCommandId(command.getId());
         for(CommandedArticles commandedArticles : list){
+            System.err.println("Quantity = " + commandedArticles.getQuantity());
             SystemStock.getSystemStock().addArticleToWarehouse(commandedArticles.getArticleId(), commandedArticles.getQuantity());
         }
         return true;
@@ -97,6 +98,7 @@ public class RetailerHelper extends Observable{
     
     public HashMap<Article,Integer> printInsufficientArticle(){
         HashMap<Article, Integer> tmp = SystemStock.getSystemStock().checkStock();
+        System.err.println(tmp.size());
         
         this.setChanged();
         this.notifyObservers(tmp);

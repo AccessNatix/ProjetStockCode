@@ -5,12 +5,18 @@
  */
 package controller;
 
+import controller.jpacontroller.ArticleJpaController;
+import controller.jpacontroller.CommandJpaController;
+import controller.jpacontroller.ProviderJpaController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import modele.SystemStock;
+import modele.entity.Article;
+import modele.entity.Command;
+import modele.entity.Provider;
 import modele.entity.handler.RetailerHelper;
 import vue.RetaillerLoginView;
 import vue.RetaillerView;
@@ -57,6 +63,14 @@ public class ControllerRetailler implements ActionListener, ChangeListener{
         this.aRetaillerHandler.printStock();
     }
     
+    public void updateStock(String id)
+    {
+        Command command = CommandJpaController.getController().findCommand(Integer.valueOf(id));
+        
+        System.err.println(command.getId());
+        this.aRetaillerHandler.handleCommand(command);
+    }
+    
     /**
      * Afficher le stock sous seuil
      */
@@ -81,19 +95,22 @@ public class ControllerRetailler implements ActionListener, ChangeListener{
     
     /**
      * Cette fonction est utilisé pour faire une commande
-     * @param name
-     * @param quantity 
+     * @param nameArticle
+     * @param quantity
+     * @param nameProvider 
      */
-    public void doCommand(String nameArticle, int quantity, String provider)
+    public void doCommand(final String nameArticle, int quantity, final String nameProvider)
     {
-        
+        Article article = ArticleJpaController.getController().findByName(nameArticle);
+        Provider provider = ProviderJpaController.getController().findByName(nameProvider);
+        HashMap<Article,Integer> map = new HashMap<>();
+        map.put(article, Integer.valueOf(quantity));
         // TODO
-        //this.aRetaillerHandler.orderArticle(, provider);
+        this.aRetaillerHandler.orderArticle(map, provider);
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        System.err.println("salut");
         
         if(ae.getSource() == this.aRetaillerLoginView.getIdentification())
         {
@@ -103,9 +120,14 @@ public class ControllerRetailler implements ActionListener, ChangeListener{
         {
             String nameArticle = this.aRetaillerView.getArticleName().getText();
             int quantiy = Integer.valueOf(this.aRetaillerView.getQuantity().getText());
-            String provider = (String)this.aRetaillerView.getProvider().getSelectedItem();
+            String provider = (String)this.aRetaillerView.getProviderInput().getText();
             
-            this.doCommand(provider, quantiy, provider);
+            this.doCommand(nameArticle, quantiy, provider);
+        }
+        else if(ae.getSource() == this.aRetaillerView.getUpdateButton())
+        {
+            String tmp = (String)this.aRetaillerView.getCommands().getValueAt(this.aRetaillerView.getCommands().getSelectedRow(), 0);
+            this.updateStock(tmp);
         }
     }
     

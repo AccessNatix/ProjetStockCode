@@ -32,6 +32,9 @@ import javax.persistence.Table;
     @NamedQuery(name = "Client.findByLastname", query = "SELECT c FROM Client c WHERE c.lastname = :lastname")})
 public class Client implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientId")
+    private Collection<ClientArticlesReturn> clientArticlesReturnCollection;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -115,6 +118,14 @@ public class Client implements Serializable {
     @Override
     public String toString() {
         return "modele.entity.Client[ id=" + id + " ]";
+    }
+
+    public Collection<ClientArticlesReturn> getClientArticlesReturnCollection() {
+        return clientArticlesReturnCollection;
+    }
+
+    public void setClientArticlesReturnCollection(Collection<ClientArticlesReturn> clientArticlesReturnCollection) {
+        this.clientArticlesReturnCollection = clientArticlesReturnCollection;
     }
     
 }
