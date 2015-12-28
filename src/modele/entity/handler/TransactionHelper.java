@@ -122,6 +122,8 @@ public class TransactionHelper {
         List<TransactionArticles> l = getArticles();
         for(TransactionArticles articles : l){
             price.add(articles.getArticleId().getPrice().multiply(new BigDecimal(articles.getQuantity())));
+            boolean b = SystemStock.getSystemStock().removeArticleFromAisle(articles.getArticleId(), articles.getQuantity());
+            if(b == false) return false;
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("type", type);

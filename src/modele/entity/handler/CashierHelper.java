@@ -94,7 +94,7 @@ public class CashierHelper extends Observable{
         List<ClientArticlesReturn> list = clientHelper.getArticlesReturn();
         
         for(ClientArticlesReturn articles : list){
-            SystemStock.getSystemStock().addArticleToWarehouse(articles.getArticleId(), articles.getQuantity());
+            //SystemStock.getSystemStock().addArticleToWarehouse(articles.getArticleId(), articles.getQuantity());
             if(aTransactionHelper.addArticle(articles.getArticleId(), articles.getQuantity()) == false) return false;
         }
         
