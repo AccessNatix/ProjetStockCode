@@ -97,9 +97,6 @@ public class ControllerCashier extends Observable implements Observer, ActionLis
         }
                         
         this.aCashierHandler.addArticles(this.aClientHelperBuy, true);
-        
-        this.setChanged();
-        this.notifyObservers();
     }
     
     /**
@@ -114,9 +111,6 @@ public class ControllerCashier extends Observable implements Observer, ActionLis
         }        
         
         this.aCashierHandler.addArticles(this.aClientHelperRefund, false);
-        
-        this.setChanged();
-        this.notifyObservers();        
     }    
 
     public void cancelTransaction()
@@ -129,6 +123,10 @@ public class ControllerCashier extends Observable implements Observer, ActionLis
     {
         this.aCashierHandler.pay(aClientHelperBuy, "cb");
         this.aCashierHandler.startTransaction("paye");
+        
+        this.setChanged();
+        this.notifyObservers();
+
     }
     
     public void refund()
@@ -136,6 +134,9 @@ public class ControllerCashier extends Observable implements Observer, ActionLis
         this.aCashierHandler.refund(aClientHelperRefund);
         this.aCashierHandler.startTransaction("refund");
         this.aCashierView.cleanInterface();
+        
+        this.setChanged();
+        this.notifyObservers();
     }
 
     /**
