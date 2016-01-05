@@ -9,35 +9,35 @@ import modele.entity.Article;
 import modele.entity.factory.EntityFactory;
 
 /**
- *
+ * Gérer les rayons dans le magasin
  * @author anatole
  */
 public class ManagerAisle {
 
     private AisleArticlesJpaController aAisleController;
-    
+
     private static ManagerAisle managerAisle = null;
-    
+
     public static ManagerAisle getManagerAisle(){
         if(managerAisle == null) managerAisle = new ManagerAisle();
         return managerAisle;
     }
-    
+
     private ManagerAisle()
     {
         this.aAisleController = AisleArticlesJpaController.getController();
     }
-    
+
     /**
      * Ajouter article a rayon
-     * @param article 
-     * @param quantity 
+     * @param article
+     * @param quantity
      */
     public void addArticleToAisle(Article article, int quantity)
     {
         // recherche article dans rayon
         AisleArticles tmp = this.aAisleController.findByArticleId(article.getId());
-         
+
         if(tmp == null)
         {
             HashMap<String, Object> map = new HashMap<>();
@@ -55,16 +55,16 @@ public class ManagerAisle {
             }
         }
     }
-    
+
     /**
      * Retirer article du rayon
-     * @param article 
-     * @param quantity 
+     * @param article
+     * @param quantity
      */
     public boolean removeArticleFromAisle(Article article, int quantity)
     {
         AisleArticles tmp = this.aAisleController.findByArticleId(article.getId());
-         
+
         if(tmp == null)
         {
             return false;
@@ -89,7 +89,7 @@ public class ManagerAisle {
         }
         return false;
     }
-    
+
     public AisleArticles getArticleFromAisle(Article article)
     {
         AisleArticles tmp = this.aAisleController.findByArticleId(article.getId());

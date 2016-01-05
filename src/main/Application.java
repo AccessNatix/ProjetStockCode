@@ -61,11 +61,11 @@ import vue.RetaillerLoginView;
 import vue.RetaillerView;
 
 /**
- *
+ * Classe principale de l'application
  * @author yo
  */
 public class Application {
-    
+
     /**
      * Pour la caisse
      */
@@ -73,37 +73,41 @@ public class Application {
     private CashierHelper aCashierHelper;
     private ClientHelper aClientHelperBuy;
     private ClientHelper aClientHelperRefund;
-    
+
     // Vue
     private CashierLoginView aCashierLoginView;
     private CashierView aCashierView;
-    
+
     // Controleur
     private ControllerCashier aControllerCashier;
-    
+
     /**
      * Pour le détaillant
      */
     // Modèle
     private RetailerHelper aRetailerHelper;
-    
+
     // Vue
     private RetaillerView aRetailerView;
     private RetaillerLoginView aRetailerLoginView;
-    
+
     // Contrôleur
     private ControllerRetailler aControllerRetailer;
-    
+
     public Application()
-    {        
+    {
         this.clearBDD();
         this.initArticle();
         this.initApp();
         this.startUp();
     }
-    
+
+    /**
+    * Effacer la bdd
+    *
+    */
     private void clearBDD(){
-        
+
         AisleArticlesJpaController.getController().reloveAll();
         ClientArticlesJpaController.getController().reloveAll();
         ClientArticlesReturnJpaController.getController().reloveAll();
@@ -125,36 +129,44 @@ public class Application {
         ArticleJpaController.getController().reloveAll();
         ProviderJpaController.getController().reloveAll();
     }
-    
+
+    /**
+    * initialiser la base de donnée
+    *
+    */
     private void initArticle()
     {
         Provider providerFirst = ObjectFactory.createProvider("adress", "jeanpaul", "0888", "92000");
         Provider providerSecond = ObjectFactory.createProvider("adress", "pierre", "082", "23000");
-        
+
         Article chaussure = ObjectFactory.createArticle(providerFirst, "barcode", "type", "chaussure", new BigDecimal(10.4), 60, 70);
         Article lait = ObjectFactory.createArticle(providerSecond, "barcode", "type", "lait", new BigDecimal(3.0), 50, 10);
         Article chocolat = ObjectFactory.createArticle(providerSecond, "barcode", "type", "chocolat", new BigDecimal(4.0), 30, 5);
-    
+
         /**
          * Ajout des articles à l'entrepot
          */
         SystemStock.getSystemStock().addArticleToWarehouse(chaussure, 60);
         SystemStock.getSystemStock().addArticleToWarehouse(lait, 50);
         SystemStock.getSystemStock().addArticleToWarehouse(chocolat, 30);
-        
+
         /**
          * restockage des rayons
          */
         SystemStock.getSystemStock().restock(chaussure, 50);
         SystemStock.getSystemStock().restock(lait, 20);
-        SystemStock.getSystemStock().restock(chocolat, 10);        
+        SystemStock.getSystemStock().restock(chocolat, 10);
     }
-    
+
+    /**
+    * Initialiser l'application
+    *
+    */
     private void initApp()
     {
         // initialiser une session
         ObjectFactory.createSession("plop", "plop");
-        
+
         /**
          * Création de la classe d'intéraction avec le caissier
          * C'est le modèle
@@ -163,73 +175,77 @@ public class Application {
         CashRegister cashRegister = ObjectFactory.createCashRegister();
         CashRegisterHelper cashHelper = new CashRegisterHelper(cashRegister);
         this.aCashierHelper = new CashierHelper(cashier, cashHelper);
-        
+
         HashMap<Article, Integer> articles = SystemStock.getSystemStock().getStockInAisle();
-        
+
         /**
          * Création du client et du helper
          */
         Client clientBuy = ObjectFactory.createClient("asterix", "legollois");
         this.aClientHelperBuy = new ClientHelper(clientBuy);
-        
+
         for(Entry<Article, Integer> article : articles.entrySet())
         {
             this.aClientHelperBuy.addArticle(article.getKey(), 1, true);
         }
-        
+
         Client clientRefund = ObjectFactory.createClient("obelix", "legollois");
         this.aClientHelperRefund = new ClientHelper(clientRefund);
-        
+
         for(Entry<Article, Integer> article : articles.entrySet())
         {
             this.aClientHelperRefund.addArticle(article.getKey(), 2, false);
         }
-        
+
         this.aCashierLoginView = new CashierLoginView();
         this.aCashierView = new CashierView();
-        
+
         // Controller
         this.aControllerCashier = new ControllerCashier(aCashierLoginView, aCashierView, aCashierHelper, aClientHelperBuy,aClientHelperRefund);
-        
+
         // set up action
         this.aCashierLoginView.addController(this.aControllerCashier);
         this.aCashierView.addController(aControllerCashier,aControllerCashier);
-        
+
         // la vue observe le cashierHelper
         this.aCashierHelper.addObserver(this.aCashierView);
-       
+
         /**
          * Partie pour le détaillant
          */
-        
+
         Retailer retailer = ObjectFactory.createRetailer("jean", "luc");
         this.aRetailerHelper = new RetailerHelper(retailer);
-        
+
         this.aRetailerView = new RetaillerView();
         this.aRetailerLoginView = new RetaillerLoginView();
-        
+
         this.aControllerRetailer = new ControllerRetailler(aRetailerHelper, aRetailerLoginView, aRetailerView);
-    
+
         // ajouter le contrôleur
         this.aRetailerLoginView.addController(this.aControllerRetailer);
         this.aRetailerView.addController(this.aControllerRetailer,this.aControllerRetailer);
-        
+
         this.aRetailerHelper.addObserver(this.aRetailerView);
-        
+
         this.aControllerCashier.addObserver(this.aControllerRetailer);
         this.aControllerRetailer.addObserver(this.aControllerCashier);
     }
-        
+
+    /**
+    * Rendre visible les premières vues
+    *
+    */
     private void startUp()
-    {  
+    {
         // init view
         this.aCashierView.setVisible(false);
         this.aCashierLoginView.setVisible(true);
-        
+
         this.aRetailerView.setVisible(false);
         this.aRetailerLoginView.setVisible(true);
     }
-    
+
     public static void main(String[] argv){
         /**
          * Set up look and feel

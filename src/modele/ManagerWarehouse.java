@@ -9,34 +9,34 @@ import modele.entity.WarehouseArticles;
 import modele.entity.factory.EntityFactory;
 
 /**
- *
+ * Gérer le stock dans l'entrepôt
  * @author anatole
  */
 public class ManagerWarehouse {
-    
+
     private WarehouseArticlesJpaController aWarehouseController;
-    
+
     private static ManagerWarehouse managerWarehouse = null;
-    
+
     public static ManagerWarehouse getManagerWarehouse(){
         if(managerWarehouse == null) managerWarehouse = new ManagerWarehouse();
         return managerWarehouse;
     }
-    
+
     private ManagerWarehouse()
     {
         this.aWarehouseController = WarehouseArticlesJpaController.getController();
     }
-    
+
     /**
      * Ajouter article a rayon
-     * @param article 
+     * @param article
      */
     public void addArticleToWarehouse(Article article, int quantity)
     {
         // recherche article dans rayon
         WarehouseArticles tmp = this.aWarehouseController.findByArticleId(article.getId());
-         
+
         if(tmp == null)
         {
             HashMap<String, Object> map = new HashMap<>();
@@ -54,15 +54,15 @@ public class ManagerWarehouse {
             }
         }
     }
-    
+
     /**
      * Retirer article du rayon
-     * @param article 
+     * @param article
      */
     public boolean removeArticleFromWarehouse(Article article, int quantity)
     {
         WarehouseArticles tmp = this.aWarehouseController.findByArticleId(article.getId());
-         
+
         if(tmp == null)
         {
             return false;
@@ -81,14 +81,14 @@ public class ManagerWarehouse {
                     this.aWarehouseController.edit(tmp);
                 }
                 return true;
-                
+
             } catch (Exception ex) {
                 Logger.getLogger(ManagerWarehouse.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return false;
     }
-    
+
     public WarehouseArticles getArticleFromWarehouse(Article article)
     {
         WarehouseArticles tmp = this.aWarehouseController.findByArticleId(article.getId());

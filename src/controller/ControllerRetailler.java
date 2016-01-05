@@ -24,39 +24,39 @@ import vue.RetaillerLoginView;
 import vue.RetaillerView;
 
 /**
- *
+ * Controleur du détaillant de notre application
  * @author anatole
  */
 public class ControllerRetailler extends Observable implements Observer,  ActionListener, ChangeListener{
 
     // Modèle
     private final RetailerHelper aRetaillerHandler;
-    
+
     // Vue pour le login
     private final RetaillerLoginView aRetaillerLoginView;
     // Vue pour la caisse
     private final RetaillerView aRetaillerView;
-    
+
     public ControllerRetailler(RetailerHelper retaillerHandler, RetaillerLoginView retaillerLoginView, RetaillerView retaillerView)
     {
         this.aRetaillerHandler = retaillerHandler;
         this.aRetaillerLoginView = retaillerLoginView;
         this.aRetaillerView = retaillerView;
     }
-    
+
     /**
      * Utiliser pour identifier le caissier
      * @param login
-     * @param password 
+     * @param password
      */
     public void login()
     {
         this.aRetaillerLoginView.setVisible(false);
         this.aRetaillerView.setVisible(true);
-        
+
         this.showStock();
     }
-    
+
     /**
      * Afficher le stock
      */
@@ -64,7 +64,7 @@ public class ControllerRetailler extends Observable implements Observer,  Action
     {
         this.aRetaillerHandler.printStock();
     }
-    
+
     public void updateStock(String id)
     {
         Command command = CommandJpaController.getController().findCommand(Integer.valueOf(id));
@@ -72,7 +72,7 @@ public class ControllerRetailler extends Observable implements Observer,  Action
         this.aRetaillerHandler.handleCommand(command);
         this.aRetaillerHandler.printCommands();
     }
-    
+
     /**
      * Afficher le stock sous seuil
      */
@@ -81,12 +81,12 @@ public class ControllerRetailler extends Observable implements Observer,  Action
         this.aRetaillerHandler.printInsufficientArticle();
         this.aRetaillerHandler.getProvider();
     }
-    
+
     public void showProviders()
     {
         this.aRetaillerHandler.getProvider();
     }
-    
+
     /**
      * Afficher commande
      */
@@ -94,12 +94,12 @@ public class ControllerRetailler extends Observable implements Observer,  Action
     {
         this.aRetaillerHandler.printCommands();
     }
-    
+
     /**
      * Cette fonction est utilisé pour faire une commande
      * @param nameArticle
      * @param quantity
-     * @param nameProvider 
+     * @param nameProvider
      */
     public void doCommand(final String nameArticle, int quantity, final String nameProvider)
     {
@@ -113,7 +113,7 @@ public class ControllerRetailler extends Observable implements Observer,  Action
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        
+
         if(ae.getSource() == this.aRetaillerLoginView.getIdentification())
         {
             this.login();
@@ -123,7 +123,7 @@ public class ControllerRetailler extends Observable implements Observer,  Action
             String nameArticle = this.aRetaillerView.getArticleName().getText();
             int quantiy = Integer.valueOf(this.aRetaillerView.getQuantity().getText());
             String provider = (String)this.aRetaillerView.getProviderInput().getText();
-            
+
             if(!nameArticle.equals("None"))
             {
                 this.doCommand(nameArticle, quantiy, provider);
@@ -134,11 +134,15 @@ public class ControllerRetailler extends Observable implements Observer,  Action
             if(this.aRetaillerView.getCommands().getRowCount() != 0)
             {
                 String tmp = (String)this.aRetaillerView.getCommands().getValueAt(this.aRetaillerView.getCommands().getSelectedRow(), 0);
-                this.updateStock(tmp);                
+                this.updateStock(tmp);
             }
         }
     }
-    
+
+    /**
+    * Appelé les fonctions en fonction de la tab changeante
+    *
+    */
     @Override
     public void stateChanged(ChangeEvent changeEvent) {
         JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
@@ -160,9 +164,13 @@ public class ControllerRetailler extends Observable implements Observer,  Action
         }
     }
 
+    /**
+    * Si un changement a lieu dans le contrôleur du caissier on mets a jour l'interface du détaillant
+    *
+    */
     @Override
     public void update(Observable o, Object o1) {
-        
+
         switch(this.aRetaillerView.getTabbedPane().getTitleAt(this.aRetaillerView.getTabbedPane().getSelectedIndex()))
         {
             case "affichage stock":
